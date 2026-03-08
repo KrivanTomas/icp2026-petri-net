@@ -2,9 +2,10 @@
 # Authors:
 # 	Tomáš Křivan
 
+.PHONY: build doxygen pack clean
 
 build:
-	echo todo
+	cd ./src && make
 
 doxygen:
 	echo todo
