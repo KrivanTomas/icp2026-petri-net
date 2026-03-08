@@ -1,0 +1,14 @@
+# .gitignore
+# Authors:
+#   Tomáš Křivan
+
+# Object files
+*.o
+
+# Executables
+*.exe
+*.out
+main
+
+# Build directory
+build/

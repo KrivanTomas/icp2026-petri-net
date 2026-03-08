@@ -1,0 +1,21 @@
+# .editorconfig
+# Authors: 
+#    Tomáš Křivan
+
+# Top-most EditorConfig file
+root = true
+
+# Genaral settings
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+
+# Makefiles
+[Makefile]
+indent_style = tab
+
+# Project source code
+[*.{c,h,cpp,hpp,cxx,hxx}]
+indent_style = space
+indent_size = 4
