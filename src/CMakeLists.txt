@@ -6,9 +6,15 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-add_library(module_test module_test.cpp module_test.h)
+# c/c++ header files
+include_directories(./include)
 
-add_library(main_window main_window.cpp main_window.h main_window.ui)
+# Qt gui xml files
+include_directories(./ui)
+
+add_library(module_test module_test.cpp include/module_test.h)
+
+add_library(main_window main_window.cpp include/main_window.h ui/main_window.ui)
 target_link_libraries(main_window PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 add_executable(main main.cpp)
