@@ -2,11 +2,14 @@
 # Authors:
 # 	Tomáš Křivan
 
-.PHONY: build doxygen pack clean
+.PHONY: build run doxygen pack clean
 
 build: dir_build
 	cd ./build && cmake ..
 	cd ./build && make
+
+run: build
+	./build/main 
 
 doxygen:
 	echo todo
