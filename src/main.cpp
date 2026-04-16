@@ -4,8 +4,8 @@
 //
 #include <iostream>
 #include <QApplication>
-#include "module_test.h"
-#include "main_window.h"
+#include "include/module_test.h"
+#include "include/main_window.h"
 
 int main(int argc, char *argv[]) {
     std::cout << "Hello, World!\n";
