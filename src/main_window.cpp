@@ -13,14 +13,17 @@
 
 #include <QPushButton>
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow())
+{
     ui->setupUi(this);
     
     this->setWindowTitle(
         QApplication::translate("editor_window_title", "Petri net editor"));
 }
 
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
     delete ui;
 }
-

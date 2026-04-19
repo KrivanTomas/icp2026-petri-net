@@ -13,7 +13,8 @@
 #include "include/module_test.h"
 #include "include/main_window.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     std::cout << "Hello, World!\n";
     module_test();
 

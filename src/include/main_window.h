@@ -3,7 +3,7 @@
  *
  * @brief Header file for the main gui window
  *
- * @author
+  * @author
  *     Tomáš Křivan
  */
 
@@ -18,7 +18,8 @@ namespace Ui {
 QT_END_NAMESPACE
 
 
-class MainWindow: public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
     
 public:

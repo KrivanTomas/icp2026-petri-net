@@ -11,6 +11,7 @@
 #include <iostream>
 #include "include/module_test.h"
 
-void module_test() {
+void module_test()
+{
     std::cout << "Hello from module!\n";
 }
