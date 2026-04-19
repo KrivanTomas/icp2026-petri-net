@@ -1,8 +1,18 @@
+// src/main.cpp
+// Authors:
+//  Tomáš Křivan
+//
 #include <iostream>
-#include "module_test.hpp"
+#include <QApplication>
+#include "include/module_test.h"
+#include "include/main_window.h"
 
-int main() {
+int main(int argc, char *argv[]) {
     std::cout << "Hello, World!\n";
     module_test();
-    return 0;
+
+    QApplication app(argc, argv);
+    MainWindow w;
+    w.show();
+    return app.exec();
 }
