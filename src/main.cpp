@@ -1,7 +1,13 @@
-// src/main.cpp
-// Authors:
-//  Tomáš Křivan
-//
+/**
+ * @file main.cpp
+ *
+ * @brief Starting point for the application
+ *
+ * @author
+ *     Tomáš Křivan
+ */
+
+
 #include <iostream>
 #include <QApplication>
 #include "include/module_test.h"

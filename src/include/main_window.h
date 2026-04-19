@@ -1,3 +1,12 @@
+/**
+ * @file main_window.h
+ *
+ * @brief Header file for the main gui window
+ *
+ * @author
+ *     Tomáš Křivan
+ */
+
 #pragma once
 
 #include <QMainWindow>

@@ -1,6 +1,12 @@
-// src/module_test.cpp
-// Authors:
-//  Tomáš Křivan
+/**
+ * @file module_test.cpp
+ *
+ * @brief A module for testing module building
+ *
+ * @author
+ *     Tomáš Křivan
+ */
+
 
 #include <iostream>
 #include "include/module_test.h"

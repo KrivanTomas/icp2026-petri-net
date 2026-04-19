@@ -1,6 +1,10 @@
-// src/module_test.h
-// Authors:
-//  Tomáš Křivan
+/**
+ * @file module_test.h
+ *
+ * @author
+ *     Tomáš Křivan
+ */
+
 
 #pragma once
 
