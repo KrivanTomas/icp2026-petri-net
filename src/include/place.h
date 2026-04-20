@@ -21,14 +21,14 @@ class Place
 {
 public:
     QString id;
-    int tokens;
+    int token_count;
 
     /**
      * @brief Constructor for Place.
      * @param id Identifier of the place.
-     * @param tokens Number of tokens (default value is 0).
+     * @param token_count Number of tokens (default value is 0).
      */
-    Place(QString id, int tokens = 0);
+    Place(QString id, int token_count = 0);
 
     /**
      * @brief Searialization of a place for a JSON object

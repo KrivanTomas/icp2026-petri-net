@@ -15,4 +15,7 @@ build/
 
 # Cache directory
 .cache/
-/.vs
+
+# Visual Studio files
+.vs/
+.vscode/

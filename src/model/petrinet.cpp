@@ -11,39 +11,40 @@
 #include <QJsonArray>
 #include <QFile>
 
-void PetriNet::addPlace(const Place& plc) {
-    places.append(plc);
+void PetriNet::addPlace(const Place& place) {
+    places.append(place);
 }
 
-void PetriNet::addTransition(const Transition& tr) {
-    transitions.append(tr);
+void PetriNet::addTransition(const Transition& transition) {
+    transitions.append(transition);
 }
 
-bool PetriNet::save(const QString& fileName) const {
+bool PetriNet::save(const QString& file_name) const {
     QJsonObject root;
-    QJsonArray plcArray, trArray;
+    QJsonArray place_array, transition_array;
 
-    for (const auto& plc : places) {
-        plcArray.append(plc.toJson());
+    for (const auto& place : places) {
+        place_array.append(place.toJson());
     }
-    for (const auto& tr : transitions) {
-        trArray.append(tr.toJson());
+    for (const auto& transition : transitions) {
+        transition_array.append(transition.toJson());
     }
 
-    root["places"] = plcArray;
-    root["transitions"] = trArray;
+    root["places"] = place_array;
+    root["transitions"] = transition_array;
 
-    QFile file(fileName);
+    QFile file(file_name);
     if (!file.open(QIODevice::WriteOnly)) {
         return false;
     }
+
     file.write(QJsonDocument(root).toJson());
     return true;
 }
 
-bool PetriNet::load(const QString& fileName){
+bool PetriNet::load(const QString& file_name){
 
-    QFile file(fileName);
+    QFile file(file_name);
     if (!file.open(QIODevice::ReadOnly)) {
         return false;
     }

@@ -24,6 +24,7 @@ class PetriNet
 public:
     QList<Place> places;
     QList<Transition> transitions;
+
     /**
      * @brief Adds a place to the petri net.
      * @param plc The place to add.
@@ -38,16 +39,16 @@ public:
 
     /**
      * @brief Saves network state into JSON file
-     * @param fileName Path to file.
+     * @param file_name Path to file.
      * @return if successful true, else false.
      */
-    bool save(const QString &fileName) const;
+    bool save(const QString &file_name) const;
 
     /**
      * @brief Loads network state from a file.
-     * @param fileName Path to file.
+     * @param file_name Path to file.
      * @return if successful true, else false.
      */
-    bool load(const QString& fileName);
+    bool load(const QString& file_name);
 
 };
