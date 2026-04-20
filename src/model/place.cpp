@@ -1,3 +1,11 @@
+/**
+ * @file place.cpp
+ *
+ * @author
+ *     Tomáš Kudera
+ */
+
+
 #include "place.h"
 
 Place::Place(QString id, int tokens) : id(id), tokens(tokens) {}

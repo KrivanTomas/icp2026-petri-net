@@ -1,5 +1,14 @@
-#ifndef PETRINET_H
-#define PETRINET_H
+/**
+ * @file petrinet.h
+ *
+ * @brief Header file for petri net containing class
+ *
+ * @author
+ *     Tomáš Kudera
+ */
+
+
+#pragma once
 
 #include <QList>
 #include <QString>
@@ -10,7 +19,8 @@
  * @class PetriNet
  * @brief Main container of Petri Net components
  */
-class PetriNet{
+class PetriNet 
+{
 public:
     QList<Place> places;
     QList<Transition> transitions;
@@ -41,5 +51,3 @@ public:
     bool load(const QString& fileName);
 
 };
-
-#endif

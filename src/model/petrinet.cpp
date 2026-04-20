@@ -1,3 +1,11 @@
+/**
+ * @file petrinet.cpp
+ *
+ * @author
+ *     Tomáš Kudera
+ */
+
+
 #include "petrinet.h"
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -53,4 +61,6 @@ bool PetriNet::load(const QString& fileName){
     for (auto v : root["transitions"].toArray()) {
         transitions.append(Transition::fromJson(v.toObject()));
     }
+
+    return true;
 }

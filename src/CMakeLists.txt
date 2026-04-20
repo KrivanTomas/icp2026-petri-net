@@ -20,6 +20,20 @@ add_library(module_test
 )
 
 
+# Petri net model
+add_library(net_model 
+    model/petrinet.cpp 
+    model/place.cpp 
+    model/transition.cpp 
+    include/petrinet.h 
+    include/place.h 
+    include/transition.h 
+)
+target_link_libraries(net_model 
+    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+)
+
+
 add_library(main_window 
     main_window.cpp 
     include/main_window.h 
@@ -35,7 +49,7 @@ add_executable(main
     main.cpp
 )
 target_link_libraries(main 
-    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets module_test main_window
+    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets module_test main_window net_model
 )
 
 

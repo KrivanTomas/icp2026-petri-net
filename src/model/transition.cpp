@@ -1,3 +1,11 @@
+/**
+ * @file transition.cpp
+ *
+ * @author
+ *     Tomáš Kudera
+ */
+
+
 #include "transition.h"
 
 Transition::Transition(QString id) : id(id) {}
