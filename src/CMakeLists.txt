@@ -24,10 +24,12 @@ add_library(module_test
 add_library(net_model 
     model/petrinet.cpp 
     model/place.cpp 
-    model/transition.cpp 
+    model/transition.cpp
+    model/arc.cpp 
     include/petrinet.h 
     include/place.h 
     include/transition.h 
+    include/arc.h
 )
 target_link_libraries(net_model 
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets

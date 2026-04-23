@@ -20,15 +20,50 @@
 class Place
 {
 public:
-    QString id;
-    int token_count;
-
     /**
      * @brief Constructor for Place.
      * @param id Identifier of the place.
      * @param token_count Number of tokens (default value is 0).
      */
-    Place(QString id, int token_count = 0);
+    Place(const QString& id, int initial_tokens = 0);
+
+    /**
+     * @brief Gets unique identifier of the place.
+     */
+    QString getId();
+
+    /**
+     * @brief Gets initial number of tokens.
+     */
+    int getInitialTokens();
+
+    /**
+     * @brief Sets new value for number of initial tokens.
+     * @param count Number of tokens.
+     */
+    void setInitialTokens(int count);
+
+    /**
+     * @brief Gets number of current tokens.
+     */
+    int getCurrentTokens();
+
+    /**
+     * @brief Sets new number of current tokens.
+     * @param count Number of tokens.
+     */
+    void setCurrentTokens(int count);
+
+    /**
+     * @brief Gets the action code. 
+     */
+    QString getActionCode();
+
+    /**
+     * @brief Sets action code asssociated with this place.
+     * @param code String containig code.
+     */
+    void setActionCode(const QString& code);
 
     /**
      * @brief Searialization of a place for a JSON object
@@ -39,7 +74,13 @@ public:
     /**
      * @brief Place instance from JSON data
      * @param json Source object
-     * @return A place object
+     * @return A new instance of the place.
      */
     static Place fromJson(const QJsonObject& json);
+
+private:
+    QString m_id;
+    int m_initial_tokens;
+    int m_current_tokens;
+    QString m_action_code;
 };
