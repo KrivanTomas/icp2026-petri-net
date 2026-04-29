@@ -10,8 +10,7 @@
 
 #pragma once
 
-#include <QString>
-#include <QJsonObject>
+#include <string>
 
 /**
 * @class Place
@@ -25,12 +24,12 @@ public:
      * @param id Identifier of the place.
      * @param token_count Number of tokens (default value is 0).
      */
-    Place(const QString& id, int initial_tokens = 0);
+    Place(const std::string& id, int initial_tokens = 0);
 
     /**
      * @brief Gets unique identifier of the place.
      */
-    QString getId();
+    std::string getId();
 
     /**
      * @brief Gets initial number of tokens.
@@ -57,30 +56,17 @@ public:
     /**
      * @brief Gets the action code. 
      */
-    QString getActionCode();
+    std::string getActionCode();
 
     /**
      * @brief Sets action code asssociated with this place.
      * @param code String containig code.
      */
-    void setActionCode(const QString& code);
-
-    /**
-     * @brief Searialization of a place for a JSON object
-     * @return QjsonObject representing the place
-     */
-    QJsonObject toJson() const;
-
-    /**
-     * @brief Place instance from JSON data
-     * @param json Source object
-     * @return A new instance of the place.
-     */
-    static Place fromJson(const QJsonObject& json);
+    void setActionCode(const std::string& code);
 
 private:
-    QString m_id;
+    std::string m_id;
     int m_initial_tokens;
     int m_current_tokens;
-    QString m_action_code;
+    std::string m_action_code;
 };

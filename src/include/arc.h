@@ -8,8 +8,7 @@
  */
 #pragma once
 
-#include <QString>
-#include <QJsonObject>
+#include <string>
 
 /**
  * @class Arc
@@ -27,22 +26,22 @@ public:
      * @param target_id The identifier of the target node.
      * @param weight The weight of the arc.
      */
-    Arc(const QString& id, const QString& source_id, const QString& target_id, int weight = 1);
+    Arc(const std::string& id, const std::string& source_id, const std::string& target_id, int weight = 1);
 
     /**
      * @brief Gets the unique identifier of the arc.
      */
-    QString getId();
+    std::string getId();
 
     /**
      * @brief Gets the unique identifier of the source node.
      */
-    QString getSourceId();
+    std::string getSourceId();
 
     /**
      * @brief Gets the unique identifier of the target node.
      */
-    QString getTargetId();
+    std::string getTargetId();
 
     /**
      * @brief Gets the weight of the arc.
@@ -55,22 +54,9 @@ public:
      */
     void setWeight(int weight);
 
-    /**
-     * @brief Serializes the data of the arc to JSON format.
-     * @return QJsonObject representing the arc.
-     */
-    QJsonObject toJson();
-
-    /**
-     * @brief Deserialization of data of the arc.
-     * @param json Object containing JSON data.
-     * @return New instance of the arc. 
-     */
-    static Arc fromJson(const QJsonObject& json);
-
 private:
-    QString m_id;
-    QString m_source_id;
-    QString m_target_id;
+    std::string m_id;
+    std::string m_source_id;
+    std::string m_target_id;
     int m_weight;
 };

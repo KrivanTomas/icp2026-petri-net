@@ -10,8 +10,7 @@
 
 #pragma once
 
-#include <QString>
-#include <QJsonObject>
+#include <string>
 
 /**
  * @class Transition
@@ -24,34 +23,34 @@ public:
      * @brief Constructor for a Transition.
      * @param id Identifier.
      */
-    Transition(const QString& id);
+    Transition(const std::string& id);
     
     /**
      * @brief Gets unique identifier of the transition.
      */
-    QString getId();
+    std::string getId();
 
     /**
      * @brief Gets the name of the input event.
      */
-    QString getInputEventName();
+    std::string getInputEventName();
 
     /**
      * @brief Sets the name of external event.
      * @param event_name The event name.
      */
-    void setInputEventName(const QString& event_name);
+    void setInputEventName(const std::string& event_name);
 
     /**
      * @brief Gets guard condition.
      */
-    QString getGuardcondition();
+    std::string getGuardcondition();
 
     /**
      * @brief Sets boolean expression/condition.
      * @param condition An expression.
      */
-    void setGuardCondition(const QString& condition);
+    void setGuardCondition(const std::string& condition);
 
     /**
      * @brief Gets time delay (firing).
@@ -67,31 +66,18 @@ public:
     /**
      * @brief gets the action code executed by this transition.
      */
-    QString getActionCode();
+    std::string getActionCode();
 
     /**
      * @brief Sets the action code (inscription language).
      * @param action_code Source code of the action.
      */
-    void setActionCode(const QString& action_code);
-
-    /**
-     * @brief Serializes the transition into JSON object.
-     * @return QJsonObject representing transition.
-     */
-    QJsonObject toJson() const;
-
-    /**
-     * @brief Creates an instance of Transition from JSON data.
-     * @param json Object with "id".
-     * @return A new Transition object.
-     */
-    static Transition fromJson(const QJsonObject& json);
+    void setActionCode(const std::string& action_code);
 
 private:
-    QString m_id;
-    QString m_input_event_name;
-    QString m_guard_condition;
+    std::string m_id;
+    std::string m_input_event_name;
+    std::string m_guard_condition;
     int m_delay_ms;
-    QString m_action_code;
+    std::string m_action_code;
 };
