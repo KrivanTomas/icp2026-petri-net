@@ -181,14 +181,14 @@ void PetriNet::runMicroSteps() {
     }
 }
 
-const std::map<std::string, Place>& PetriNet::getPlaces() {
+std::map<std::string, Place>& PetriNet::getPlaces() {
     return m_places;
 }
 
-const std::map<std::string, Transition>& PetriNet::getTransitions() {
+std::map<std::string, Transition>& PetriNet::getTransitions() {
     return m_transitions;
 }
 
-const std::map<std::string, Arc>& PetriNet::getArcs() {
+std::map<std::string, Arc>& PetriNet::getArcs() {
     return m_arcs;
 }
