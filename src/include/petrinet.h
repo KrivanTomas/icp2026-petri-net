@@ -32,20 +32,23 @@ public:
     /**
      * @brief Adds a place to the petri net.
      * @param plc The place to add.
+     * @return true if place was added, or else false
      */
-    void addPlace(const Place &plc);
+    bool addPlace(const Place &plc);
 
     /**
      * @brief Adds a transition to the petri net.
      * @param tr The transition to add.
+     * @return true if transition was added, or false
      */
-    void addTransition(const Transition &tr);
+    bool addTransition(const Transition &tr);
 
     /**
      * @brief Adds an arc to petri net.
      * @param arc The arc to be added.
+     * @return true if an arc was added, else false
      */
-    void addArcs(const Arc &arc);
+    bool addArcs(const Arc &arc);
 
     /**
      * @brief Gets the name of PetriNet.

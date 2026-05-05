@@ -8,16 +8,54 @@
 
 #include "petrinet.h"
 
-void PetriNet::addPlace(const Place& place) {
-    m_places.insert(std::pair(place.getId(), place));
+bool PetriNet::addPlace(const Place& place) {
+    if(m_places.find(place.getId()) != m_places.end()) {
+        return false;
+    }
+    m_places.emplace(place.getId(), place);
+    return true;
 }
 
-void PetriNet::addTransition(const Transition& transition) {
-    m_transitions.insert(std::pair(transition.getId(), transition));
+bool PetriNet::addTransition(const Transition& transition) {
+    if(m_transitions.find(transition.getId()) != m_transitions.end()) {
+        return false;
+    }
+    m_transitions.emplace(transition.getId(), transition);
+    return true;
 }
 
-void PetriNet::addArcs(const Arc& arc) {
-    m_arcs.insert(std::pair(arc.getId(), arc));
+bool PetriNet::addArcs(const Arc& arc) {
+    std::string source_ID = arc.getSourceId();
+    std::string target_ID = arc.getTargetId();
+
+    bool source_is_place = m_places.find(source_ID) != m_places.end();
+    bool source_is_transition = m_transitions.find(source_ID) != m_transitions.end();
+
+    bool target_is_place = m_places.find(target_ID) != m_places.end();
+    bool target_is_transition = m_transitions.find(target_ID) != m_transitions.end();
+
+    if(!(source_is_place || source_is_transition)) {
+        return false;
+    }
+
+    if(!(target_is_place || target_is_transition)) {
+        return false;
+    }
+
+    if(source_is_place && target_is_place) {
+        return false;
+    }
+
+    if(source_is_transition && target_is_transition) {
+        return false;
+    }
+
+    if(m_arcs.find(arc.getId()) != m_arcs.end()) {
+        return false;
+    }
+
+    m_arcs.emplace(arc.getId(), arc);
+    return true;
 }
 
 std::string PetriNet::getName() const {
@@ -140,7 +178,7 @@ bool PetriNet::fire(const std::string& transition_id) {
 
 //setting initial value of tokens for every place
 void PetriNet::reset() {
-    for(auto place : m_places) {
+    for(auto& place : m_places) {
         place.second.setCurrentTokens(place.second.getInitialTokens());
     }
 }
@@ -178,6 +216,28 @@ void PetriNet::runMicroSteps() {
                 
             }
         }
+    }
+}
+
+void PetriNet::updateTime(int64_t current_time_ms) {
+    m_current_time_ms = current_time_ms;
+    bool timer_fired = false;
+
+    for(auto it = m_timers.begin(); it != m_timers.end(); ) {
+        if(m_current_time_ms >= it->target_time_ms) {
+            std::string t_id = it->transition_id;
+            if(ableToBeFired(t_id)) {
+                fire(t_id);
+                timer_fired = true;
+            }
+            it = m_timers.erase(it);
+        }
+        else {
+            it++;
+        }
+    } 
+    if(timer_fired) {
+        runMicroSteps();
     }
 }
 
