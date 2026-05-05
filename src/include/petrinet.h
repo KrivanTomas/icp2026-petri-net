@@ -129,9 +129,9 @@ public:
     void updateTime(int64_t current_time_ms);
 
     //getters
-    const std::map<std::string, Place>& getPlaces();
-    const std::map<std::string, Transition>& getTransitions();
-    const std::map<std::string, Arc>& getArcs();
+    std::map<std::string, Place>& getPlaces();
+    std::map<std::string, Transition>& getTransitions();
+    std::map<std::string, Arc>& getArcs();
 
 private:
     std::string m_name;
