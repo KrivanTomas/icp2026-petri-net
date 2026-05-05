@@ -55,8 +55,24 @@ target_link_libraries(main
 )
 
 
+
+add_executable(simulation 
+    simulation/main.cpp
+)
+target_link_libraries(simulation 
+     net_model
+)
+
+
 # set main binary location to ./build/main instead of ./build/src/main
 set_target_properties(main 
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+
+set_target_properties(simulation
     PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
