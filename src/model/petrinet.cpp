@@ -9,15 +9,15 @@
 #include "petrinet.h"
 
 void PetriNet::addPlace(const Place& place) {
-    m_places.push_back(place);
+    m_places.insert(std::pair(place.getId(), place));
 }
 
 void PetriNet::addTransition(const Transition& transition) {
-    m_transitions.push_back(transition);
+    m_transitions.insert(std::pair(transition.getId(), transition));
 }
 
 void PetriNet::addArcs(const Arc& arc) {
-    m_arcs.push_back(arc);
+    m_arcs.insert(std::pair(arc.getId(), arc));
 }
 
 std::string PetriNet::getName() const {
@@ -64,7 +64,7 @@ bool PetriNet::ableToBeFired(const std::string& transition_id) {
     //check if transition with this ID exists
     bool exists = false;
     for(auto& trans : m_transitions) {
-        if(trans.getId() == transition_id) {
+        if(trans.second.getId() == transition_id) {
             exists = true;
             break;
         }
@@ -74,7 +74,8 @@ bool PetriNet::ableToBeFired(const std::string& transition_id) {
         return false;
     }
 
-    for(auto& arc : m_arcs) {
+    for(auto& pair : m_arcs) {
+        auto& arc = pair.second;
         //if arc points into this transition
         if(arc.getTargetId() == transition_id) {
             std::string place_source_id = arc.getSourceId();
@@ -82,15 +83,15 @@ bool PetriNet::ableToBeFired(const std::string& transition_id) {
             
             //finding of the entry point and checking tokens
             bool enough_tokens = false;
-            for(auto& place : m_places) {
-                if(place.getId() == place_source_id) {
-                    if(place.getCurrentTokens() >= requiredTokens) {
-                        enough_tokens = true;
-                    }
-                    break;
+
+            //
+            if(auto place = m_places.find(place_source_id); place != m_places.end()){
+                if(place->second.getCurrentTokens() >= requiredTokens) {
+                    enough_tokens = true;
                 }
             }
-            //if place was not found or thre were not enought tokens, then the transition can not be fired
+            
+            //if place was not found or there were not enough tokens, then the transition can not be fired
             if(!enough_tokens) {
                 return false;
             }
@@ -106,32 +107,31 @@ bool PetriNet::fire(const std::string& transition_id) {
     }
 
     //removing tokens
-    for(auto& arc : m_arcs) {
+    for(auto& pair : m_arcs) {
+        auto& arc = pair.second;
         if(arc.getTargetId() == transition_id) {
             std::string place_source_id = arc.getSourceId();
             int tokens_remove = arc.getWeight();
 
-            for(auto& place : m_places) {
-                if(place.getId() == place_source_id) {
-                    place.setCurrentTokens(place.getCurrentTokens() - tokens_remove);
-                    break;
-                }
+            
+            if(auto place = m_places.find(place_source_id); place != m_places.end()) {
+                place->second.setCurrentTokens(place->second.getCurrentTokens() - tokens_remove);
+                break;
             }
         }
     }
 
     //adding of tokens
-    for(auto& arc : m_arcs) {
+    for(auto& pair : m_arcs) {
+        auto& arc = pair.second;
         //if arc exits out of this transition, then it is an exit arc
         if(arc.getSourceId() == transition_id) {
             std::string place_target_id = arc.getTargetId();
             int tokens_add = arc.getWeight();
             
-            for(auto& place : m_places) {
-                if(place.getId() == place_target_id) {
-                    place.setCurrentTokens(place.getCurrentTokens() + tokens_add);
-                    break;
-                }
+            if(auto place = m_places.find(place_target_id); place != m_places.end()) {
+                place->second.setCurrentTokens(place->second.getCurrentTokens() + tokens_add);
+                break;
             }
         }
     }
@@ -141,7 +141,7 @@ bool PetriNet::fire(const std::string& transition_id) {
 //setting initial value of tokens for every place
 void PetriNet::reset() {
     for(auto place : m_places) {
-        place.setCurrentTokens(place.getInitialTokens());
+        place.second.setCurrentTokens(place.second.getInitialTokens());
     }
 }
 
@@ -150,7 +150,8 @@ void PetriNet::runMicroSteps() {
 
     while(network_change) {
         network_change = false;
-        for(auto& trans : m_transitions) {
+        for(auto& pair : m_transitions) {
+            auto& trans = pair.second;
             std::string trans_id = trans.getId();
 
             if(ableToBeFired(trans_id)) {
@@ -180,14 +181,14 @@ void PetriNet::runMicroSteps() {
     }
 }
 
-const std::vector<Place>& PetriNet::getPlaces() {
+const std::map<std::string, Place>& PetriNet::getPlaces() {
     return m_places;
 }
 
-const std::vector<Transition>& PetriNet::getTransitions() {
+const std::map<std::string, Transition>& PetriNet::getTransitions() {
     return m_transitions;
 }
 
-const std::vector<Arc>& PetriNet::getArcs() {
+const std::map<std::string, Arc>& PetriNet::getArcs() {
     return m_arcs;
 }

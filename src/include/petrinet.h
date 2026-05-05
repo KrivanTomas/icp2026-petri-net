@@ -129,9 +129,9 @@ public:
     void updateTime(int64_t current_time_ms);
 
     //getters
-    const std::vector<Place>& getPlaces();
-    const std::vector<Transition>& getTransitions();
-    const std::vector<Arc>& getArcs();
+    const std::map<std::string, Place>& getPlaces();
+    const std::map<std::string, Transition>& getTransitions();
+    const std::map<std::string, Arc>& getArcs();
 
 private:
     std::string m_name;
@@ -140,9 +140,9 @@ private:
     std::map<std::string, std::string> m_inputs;
     std::map<std::string, std::string> m_variables;
 
-    std::vector<Place> m_places;
-    std::vector<Transition> m_transitions;
-    std::vector<Arc> m_arcs;
+    std::map<std::string, Place> m_places;
+    std::map<std::string, Transition> m_transitions;
+    std::map<std::string, Arc> m_arcs;
 
     int64_t m_current_time_ms = 0;
     std::vector<PendingTimer> m_timers;
