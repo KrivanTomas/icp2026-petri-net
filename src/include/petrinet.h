@@ -50,7 +50,7 @@ public:
     /**
      * @brief Gets the name of PetriNet.
      */
-    std::string getName();
+    std::string getName() const;
 
     /**
      * @brief Sets the name of petri net.
@@ -61,7 +61,7 @@ public:
     /**
      * @brief Gets network description or comment.
      */
-    std::string getComment();
+    std::string getComment() const;
     
     /**
      * @brief Sets the network description or comment.
@@ -74,7 +74,7 @@ public:
      * @param input_name The identifier of the input.
      * @return The stored value, or an empty string. 
      */
-    std::string getInputValue(std::string& input_name);
+    std::string getInputValue(std::string& input_name) const;
 
     /**
      * @brief Sets last known value of an external input.
@@ -88,7 +88,7 @@ public:
      * @param var_name Name of the variable.
      * @return The stored value, or an emty string.
      */
-    std::string getVariable(std::string& var_name);
+    std::string getVariable(std::string& var_name) const;
 
     /**
      * @brief Sets the value of an internal network variable.
@@ -129,9 +129,9 @@ public:
     void updateTime(int64_t current_time_ms);
 
     //getters
-    const std::vector<Place>& getPlaces();
-    const std::vector<Transition>& getTransitions();
-    const std::vector<Arc>& getArcs();
+    const std::map<std::string, Place>& getPlaces();
+    const std::map<std::string, Transition>& getTransitions();
+    const std::map<std::string, Arc>& getArcs();
 
 private:
     std::string m_name;
@@ -140,9 +140,9 @@ private:
     std::map<std::string, std::string> m_inputs;
     std::map<std::string, std::string> m_variables;
 
-    std::vector<Place> m_places;
-    std::vector<Transition> m_transitions;
-    std::vector<Arc> m_arcs;
+    std::map<std::string, Place> m_places;
+    std::map<std::string, Transition> m_transitions;
+    std::map<std::string, Arc> m_arcs;
 
     int64_t m_current_time_ms = 0;
     std::vector<PendingTimer> m_timers;

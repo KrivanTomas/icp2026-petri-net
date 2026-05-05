@@ -10,19 +10,19 @@
 
 Arc::Arc(const std::string& id, const std::string& source_id, const std::string& target_id, int weight) : m_id(id), m_source_id(source_id), m_target_id(target_id), m_weight(weight){}
 
-std::string Arc::getId() {
+std::string Arc::getId() const {
     return m_id;
 }
 
-std::string Arc::getSourceId() {
+std::string Arc::getSourceId() const {
     return m_source_id;
 }
 
-std::string Arc::getTargetId() {
+std::string Arc::getTargetId() const {
     return m_target_id;
 }
 
-int Arc::getWeight() {
+int Arc::getWeight() const {
     return m_weight;
 }
 

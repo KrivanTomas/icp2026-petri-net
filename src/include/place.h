@@ -29,12 +29,12 @@ public:
     /**
      * @brief Gets unique identifier of the place.
      */
-    std::string getId();
+    std::string getId() const;
 
     /**
      * @brief Gets initial number of tokens.
      */
-    int getInitialTokens();
+    int getInitialTokens() const;
 
     /**
      * @brief Sets new value for number of initial tokens.
@@ -45,7 +45,7 @@ public:
     /**
      * @brief Gets number of current tokens.
      */
-    int getCurrentTokens();
+    int getCurrentTokens() const;
 
     /**
      * @brief Sets new number of current tokens.
@@ -56,7 +56,7 @@ public:
     /**
      * @brief Gets the action code. 
      */
-    std::string getActionCode();
+    std::string getActionCode() const;
 
     /**
      * @brief Sets action code asssociated with this place.
