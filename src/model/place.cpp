@@ -10,11 +10,11 @@
 
 Place::Place(const std::string& id, int initial_tokens) : m_id(id), m_initial_tokens(initial_tokens), m_current_tokens(initial_tokens) {}
 
-std::string Place::getId() {
+std::string Place::getId() const {
     return m_id;
 }
 
-int Place::getInitialTokens() {
+int Place::getInitialTokens() const {
     return m_initial_tokens;
 }
 
@@ -22,7 +22,7 @@ void Place::setInitialTokens(int count) {
     m_initial_tokens = count;
 }
 
-int Place::getCurrentTokens() {
+int Place::getCurrentTokens() const {
     return m_current_tokens;
 }
 
@@ -30,7 +30,7 @@ void Place::setCurrentTokens(int count) {
     m_current_tokens = count;
 }
 
-std::string Place::getActionCode() {
+std::string Place::getActionCode() const {
     return m_action_code;
 }
 

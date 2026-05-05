@@ -50,7 +50,7 @@ public:
     /**
      * @brief Gets the name of PetriNet.
      */
-    std::string getName();
+    std::string getName() const;
 
     /**
      * @brief Sets the name of petri net.
@@ -61,7 +61,7 @@ public:
     /**
      * @brief Gets network description or comment.
      */
-    std::string getComment();
+    std::string getComment() const;
     
     /**
      * @brief Sets the network description or comment.
@@ -74,7 +74,7 @@ public:
      * @param input_name The identifier of the input.
      * @return The stored value, or an empty string. 
      */
-    std::string getInputValue(std::string& input_name);
+    std::string getInputValue(std::string& input_name) const;
 
     /**
      * @brief Sets last known value of an external input.
@@ -88,7 +88,7 @@ public:
      * @param var_name Name of the variable.
      * @return The stored value, or an emty string.
      */
-    std::string getVariable(std::string& var_name);
+    std::string getVariable(std::string& var_name) const;
 
     /**
      * @brief Sets the value of an internal network variable.

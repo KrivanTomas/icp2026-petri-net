@@ -7,9 +7,6 @@
 
 
 #include "petrinet.h"
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QFile>
 
 void PetriNet::addPlace(const Place& place) {
     m_places.push_back(place);
@@ -23,7 +20,7 @@ void PetriNet::addArcs(const Arc& arc) {
     m_arcs.push_back(arc);
 }
 
-std::string PetriNet::getName() {
+std::string PetriNet::getName() const {
     return m_name;
 }
 
@@ -31,7 +28,7 @@ void PetriNet::setName(std::string& name) {
     m_name = name;
 }
 
-std::string PetriNet::getComment() {
+std::string PetriNet::getComment() const {
     return m_comment;
 }
 
@@ -39,7 +36,7 @@ void PetriNet::setComment(std::string& comment) {
     m_comment = comment;
 }
 
-std::string PetriNet::getInputValue(std::string& input_name) {
+std::string PetriNet::getInputValue(std::string& input_name) const {
     auto it = m_inputs.find(input_name);
     if(it != m_inputs.end()) {
         return it->second;
@@ -51,7 +48,7 @@ void PetriNet::setInputValue(std::string& input_name, std::string& value) {
     m_inputs[input_name] = value;
 }
 
-std::string PetriNet::getVariable(std::string& var_name) {
+std::string PetriNet::getVariable(std::string& var_name) const {
     auto it = m_variables.find(var_name);
     if(it != m_variables.end()) {
         return it->second;
