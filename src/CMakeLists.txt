@@ -26,10 +26,12 @@ add_library(net_model
     model/place.cpp 
     model/transition.cpp
     model/arc.cpp 
+    event.cpp
     include/petrinet.h 
     include/place.h 
     include/transition.h 
     include/arc.h
+    include/event.h
 )
 target_link_libraries(net_model 
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets

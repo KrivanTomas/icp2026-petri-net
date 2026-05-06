@@ -16,6 +16,7 @@
 #include "place.h"
 #include "transition.h"
 #include "arc.h"
+#include "event.h"
 
 struct PendingTimer {
     std::string transition_id;
@@ -26,7 +27,7 @@ struct PendingTimer {
  * @class PetriNet
  * @brief Main container of Petri Net components
  */
-class PetriNet 
+class PetriNet : public Subject
 {
 public:
     /**

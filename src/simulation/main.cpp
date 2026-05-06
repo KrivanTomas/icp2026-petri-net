@@ -1,5 +1,5 @@
 /**
- * @file main.cpp
+ * @file simulation/main.cpp
  *
  * @brief Simulation of the petrinet
  *
@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include "../include/petrinet.h"
+#include "../include/event.h"
+
 
 int main()
 {
@@ -23,11 +25,13 @@ int main()
     p_net.addArcs(Arc("1a", "1p", "1t", 2));
     p_net.addArcs(Arc("2a", "1t", "2p", 5));
 
+    
     bool fired = p_net.fire("1t");
     
+
     std::cout << (fired ? "Place1 -> Place2 fired successfuly." : "Place1 -> Place2 failed to fire.") << "\n";
 
-    std::cout << ((Place)p_net.getPlaces().at(0)).getId() << " current tokens: " << ((Place)p_net.getPlaces().at(0)).getCurrentTokens() << ".\n";
-    std::cout << ((Place)p_net.getPlaces().at(1)).getId() << " current tokens: " << ((Place)p_net.getPlaces().at(1)).getCurrentTokens() << ".\n";
+    std::cout << "1p current tokens: " << p_net.getPlaces().at("1p").getCurrentTokens() << ".\n";
+    std::cout << "2p current tokens: " << p_net.getPlaces().at("2p").getCurrentTokens() << ".\n";
     return 0;
 }
