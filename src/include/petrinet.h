@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <set>
 #include "place.h"
 #include "transition.h"
 #include "arc.h"
@@ -131,6 +132,25 @@ public:
      */
     void updateTime(int64_t current_time_ms);
 
+    /**
+     * @brief Returns current time of the petri net.
+     * @return Time in ms.
+     */
+    int petriNetInternalTime();
+
+    /**
+     * @brief Check if external input is defined.
+     * @param input_name Validated input.
+     * @return True if input is defined, or else false.
+     */
+    bool isDefined(const std::string& input_name);
+
+    /**
+     * @brief Function triggers given event and evaluates the network.
+     * @param event Name of the event.
+     */
+    void triggerEvent(const std::string& event);
+
     //getters
     std::map<std::string, Place>& getPlaces();
     std::map<std::string, Transition>& getTransitions();
@@ -142,6 +162,9 @@ private:
 
     std::map<std::string, std::string> m_inputs;
     std::map<std::string, std::string> m_variables;
+
+    std::string m_event;
+    std::set<std::string> m_defined_inputs;
 
     std::map<std::string, Place> m_places;
     std::map<std::string, Transition> m_transitions;

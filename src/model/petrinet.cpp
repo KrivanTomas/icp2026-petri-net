@@ -84,6 +84,7 @@ std::string PetriNet::getInputValue(std::string& input_name) const {
 
 void PetriNet::setInputValue(std::string& input_name, std::string& value) {
     m_inputs[input_name] = value;
+    m_defined_inputs.insert(input_name);
 }
 
 std::string PetriNet::getVariable(std::string& var_name) const {
@@ -100,15 +101,12 @@ void PetriNet::setvariable(std::string& var_name, std::string& value) {
 
 bool PetriNet::ableToBeFired(const std::string& transition_id) {
     //check if transition with this ID exists
-    bool exists = false;
-    for(auto& trans : m_transitions) {
-        if(trans.second.getId() == transition_id) {
-            exists = true;
-            break;
-        }
+    if(m_transitions.find(transition_id) == m_transitions.end()) {
+        return false;
     }
 
-    if(!exists) {
+    std::string required_event = m_transitions.at(transition_id).getInputEventName();
+    if(!required_event.empty() && required_event != m_event) {
         return false;
     }
 
@@ -154,7 +152,7 @@ bool PetriNet::fire(const std::string& transition_id) {
             
             if(auto place = m_places.find(place_source_id); place != m_places.end()) {
                 place->second.setCurrentTokens(place->second.getCurrentTokens() - tokens_remove);
-                break;
+                place->second.setLasttimeChange(m_current_time_ms);
             }
         }
     }
@@ -169,7 +167,7 @@ bool PetriNet::fire(const std::string& transition_id) {
             
             if(auto place = m_places.find(place_target_id); place != m_places.end()) {
                 place->second.setCurrentTokens(place->second.getCurrentTokens() + tokens_add);
-                break;
+                place->second.setLasttimeChange(m_current_time_ms);
             }
         }
     }
@@ -239,6 +237,23 @@ void PetriNet::updateTime(int64_t current_time_ms) {
     if(timer_fired) {
         runMicroSteps();
     }
+}
+
+int PetriNet::petriNetInternalTime() {
+    return m_current_time_ms;
+}
+
+bool PetriNet::isDefined(const std::string& input_name) {
+    if(m_defined_inputs.find(input_name) != m_defined_inputs.end()) {
+        return true;
+    }
+    return false;
+}
+
+void PetriNet::triggerEvent(const std::string& event) {
+    m_event = event;
+    runMicroSteps();
+    m_event = "";
 }
 
 std::map<std::string, Place>& PetriNet::getPlaces() {

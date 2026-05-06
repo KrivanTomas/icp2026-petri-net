@@ -37,3 +37,11 @@ std::string Place::getActionCode() const {
 void Place::setActionCode(const std::string& code) {
     m_action_code = code;
 }
+
+int Place::getLastTimeChange() const {
+    return m_last_change_time_ms;
+}
+
+void Place::setLasttimeChange(int time_ms) {
+    m_last_change_time_ms = time_ms;
+}
