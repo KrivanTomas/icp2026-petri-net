@@ -62,7 +62,7 @@ std::string PetriNet::getName() const {
     return m_name;
 }
 
-void PetriNet::setName(std::string& name) {
+void PetriNet::setName(const std::string& name) {
     m_name = name;
 }
 
@@ -70,11 +70,11 @@ std::string PetriNet::getComment() const {
     return m_comment;
 }
 
-void PetriNet::setComment(std::string& comment) {
+void PetriNet::setComment(const std::string& comment) {
     m_comment = comment;
 }
 
-std::string PetriNet::getInputValue(std::string& input_name) const {
+std::string PetriNet::getInputValue(const std::string& input_name) const {
     auto it = m_inputs.find(input_name);
     if(it != m_inputs.end()) {
         return it->second;
@@ -82,12 +82,12 @@ std::string PetriNet::getInputValue(std::string& input_name) const {
     return "";
 }
 
-void PetriNet::setInputValue(std::string& input_name, std::string& value) {
+void PetriNet::setInputValue(const std::string& input_name, const std::string& value) {
     m_inputs[input_name] = value;
     m_defined_inputs.insert(input_name);
 }
 
-std::string PetriNet::getVariable(std::string& var_name) const {
+std::string PetriNet::getVariable(const std::string& var_name) const {
     auto it = m_variables.find(var_name);
     if(it != m_variables.end()) {
         return it->second;
@@ -95,7 +95,7 @@ std::string PetriNet::getVariable(std::string& var_name) const {
     return "";
 }
 
-void PetriNet::setvariable(std::string& var_name, std::string& value) {
+void PetriNet::setVariable(const std::string& var_name, const std::string& value) {
     m_variables[var_name] = value;
 }
 
@@ -239,11 +239,11 @@ void PetriNet::updateTime(int64_t current_time_ms) {
     }
 }
 
-int PetriNet::petriNetInternalTime() {
+int PetriNet::petriNetInternalTime() const {
     return m_current_time_ms;
 }
 
-bool PetriNet::isDefined(const std::string& input_name) {
+bool PetriNet::isDefined(const std::string& input_name) const {
     if(m_defined_inputs.find(input_name) != m_defined_inputs.end()) {
         return true;
     }
@@ -256,14 +256,14 @@ void PetriNet::triggerEvent(const std::string& event) {
     m_event = "";
 }
 
-std::map<std::string, Place>& PetriNet::getPlaces() {
+const std::map<std::string, Place>& PetriNet::getPlaces() const {
     return m_places;
 }
 
-std::map<std::string, Transition>& PetriNet::getTransitions() {
+const std::map<std::string, Transition>& PetriNet::getTransitions() const {
     return m_transitions;
 }
 
-std::map<std::string, Arc>& PetriNet::getArcs() {
+const std::map<std::string, Arc>& PetriNet::getArcs() const {
     return m_arcs;
 }

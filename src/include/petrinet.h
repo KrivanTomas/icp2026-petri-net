@@ -53,6 +53,7 @@ public:
 
     /**
      * @brief Gets the name of PetriNet.
+     * @return Name of the PetriNet.
      */
     std::string getName() const;
 
@@ -60,10 +61,11 @@ public:
      * @brief Sets the name of petri net.
      * @param name New name.
      */
-    void setName(std::string& name);
+    void setName(const std::string& name);
     
     /**
      * @brief Gets network description or comment.
+     * @return Network description or comment.
      */
     std::string getComment() const;
     
@@ -71,35 +73,35 @@ public:
      * @brief Sets the network description or comment.
      * @param comment The comment/description.
      */
-    void setComment(std::string& comment);
+    void setComment(const std::string& comment);
 
     /**
      * @brief Retrieves last value of external input.
      * @param input_name The identifier of the input.
      * @return The stored value, or an empty string. 
      */
-    std::string getInputValue(std::string& input_name) const;
+    std::string getInputValue(const std::string& input_name) const;
 
     /**
      * @brief Sets last known value of an external input.
      * @param input_name The identifier of the input.
      * @param value New value.
      */
-    void setInputValue(std::string& input_name, std::string& value);
+    void setInputValue(const std::string& input_name, const std::string& value);
 
     /**
      * @brief Retrieves the value of an internal network variable.
      * @param var_name Name of the variable.
      * @return The stored value, or an emty string.
      */
-    std::string getVariable(std::string& var_name) const;
+    std::string getVariable(const std::string& var_name) const;
 
     /**
      * @brief Sets the value of an internal network variable.
      * @param var_name Name of the variable.
      * @param value New value.
      */
-    void setvariable(std::string& var_name, std::string& value);
+    void setVariable(const std::string& var_name, const std::string& value);
 
     /**
      * @brief Function checks if transition has enough tokens to be fired.
@@ -136,14 +138,14 @@ public:
      * @brief Returns current time of the petri net.
      * @return Time in ms.
      */
-    int petriNetInternalTime();
+    int petriNetInternalTime() const;
 
     /**
      * @brief Check if external input is defined.
      * @param input_name Validated input.
      * @return True if input is defined, or else false.
      */
-    bool isDefined(const std::string& input_name);
+    bool isDefined(const std::string& input_name) const;
 
     /**
      * @brief Function triggers given event and evaluates the network.
@@ -152,9 +154,9 @@ public:
     void triggerEvent(const std::string& event);
 
     //getters
-    std::map<std::string, Place>& getPlaces();
-    std::map<std::string, Transition>& getTransitions();
-    std::map<std::string, Arc>& getArcs();
+    const std::map<std::string, Place>& getPlaces() const;
+    const std::map<std::string, Transition>& getTransitions() const;
+    const std::map<std::string, Arc>& getArcs() const;
 
 private:
     std::string m_name;
