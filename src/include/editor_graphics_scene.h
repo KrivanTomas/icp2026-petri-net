@@ -29,6 +29,10 @@ public slots:
     void setInsertObjectTransition();
     void setInsertObjectArc();
 
+signals:
+    void modeChanged(Mode mode);
+    void insertObjectChanged(InsertObject mode);
+
 protected:
     Mode editorMode;
     InsertObject insertObject;

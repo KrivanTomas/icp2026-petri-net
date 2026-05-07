@@ -284,7 +284,7 @@
     <string>Export</string>
    </property>
   </action>
-  <actiongroup name="InsertGroup">
+  <actiongroup name="insertGroup">
    <action name="actionPlace">
     <property name="checkable">
      <bool>true</bool>
@@ -325,7 +325,7 @@
     </property>
    </action>
   </actiongroup>
-  <actiongroup name="ModeGroup">
+  <actiongroup name="modeGroup">
    <action name="actionModeEdit">
     <property name="checkable">
      <bool>true</bool>

@@ -21,30 +21,32 @@ EditorGraphicsScene::EditorGraphicsScene(QObject *parent) : QGraphicsScene(paren
 
 void EditorGraphicsScene::setMode(Mode mode) {
     editorMode = mode;
+    emit modeChanged(mode);
 }
 
 void EditorGraphicsScene::setEditMode() {
-    editorMode = Mode::Edit;
+    setMode(Mode::Edit);
 }
 
 void EditorGraphicsScene::setInsertMode() {
-    editorMode = Mode::Insert;
+    setMode(Mode::Insert);
 }
 
 void EditorGraphicsScene::setInsertObject(InsertObject insert) {
     insertObject = insert;
+    emit insertObjectChanged(insert);
 }
 
 void EditorGraphicsScene::setInsertObjectPlace() {
-    insertObject = InsertObject::Place;
+    setInsertObject(InsertObject::Place);
 }
 
 void EditorGraphicsScene::setInsertObjectTransition() {
-    insertObject = InsertObject::Transition;
+    setInsertObject(InsertObject::Transition);
 }
 
 void EditorGraphicsScene::setInsertObjectArc() {
-    insertObject = InsertObject::Arc;
+    setInsertObject(InsertObject::Arc);
 }
 
 

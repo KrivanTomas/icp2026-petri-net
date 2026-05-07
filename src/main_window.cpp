@@ -33,6 +33,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionTransition, &QAction::triggered, scene, &EditorGraphicsScene::setInsertObjectTransition);
     connect(ui->actionArc, &QAction::triggered, scene, &EditorGraphicsScene::setInsertObjectArc);
 
+
+    connect(scene, &EditorGraphicsScene::modeChanged, this, &MainWindow::onEditorModeChanged);
+
+
+    ui->insertGroup->setEnabled(false);
+
     ui->graphicsView->setScene(scene);
 }
 
@@ -40,6 +46,15 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete scene;
+}
+
+void MainWindow::onEditorModeChanged(EditorGraphicsScene::Mode mode) {
+    if(mode == EditorGraphicsScene::Mode::Insert) {
+        ui->insertGroup->setEnabled(true);
+    }
+    else {
+        ui->insertGroup->setEnabled(false);
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

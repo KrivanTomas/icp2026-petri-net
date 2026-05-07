@@ -29,6 +29,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void onEditorModeChanged(EditorGraphicsScene::Mode mode);
+
 protected:
     void closeEvent(QCloseEvent *event) override;
 
