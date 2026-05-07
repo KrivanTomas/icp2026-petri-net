@@ -12,6 +12,14 @@
 #include "../include/petrinet.h"
 #include "../include/event.h"
 
+class EventTester : public Observer
+{
+public:
+    virtual void onEvent(Event event) {
+        if(event == Event::update_tokens_)
+        std::cout << "Got event to update tokens!\n";
+    }
+};
 
 int main()
 {
@@ -25,7 +33,10 @@ int main()
     p_net.addArcs(Arc("1a", "1p", "1t", 2));
     p_net.addArcs(Arc("2a", "1t", "2p", 5));
 
-    
+    EventTester* et = new EventTester();
+
+    p_net.addObserver(et);
+
     bool fired = p_net.fire("1t");
     
 

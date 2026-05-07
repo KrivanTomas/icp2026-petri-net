@@ -116,6 +116,7 @@ bool PetriNet::fire(const std::string& transition_id) {
             
             if(auto place = m_places.find(place_source_id); place != m_places.end()) {
                 place->second.setCurrentTokens(place->second.getCurrentTokens() - tokens_remove);
+                throwEvent(update_tokens_);
                 break;
             }
         }
@@ -131,6 +132,7 @@ bool PetriNet::fire(const std::string& transition_id) {
             
             if(auto place = m_places.find(place_target_id); place != m_places.end()) {
                 place->second.setCurrentTokens(place->second.getCurrentTokens() + tokens_add);
+                throwEvent(update_tokens_);
                 break;
             }
         }
