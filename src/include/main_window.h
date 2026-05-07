@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "editor_graphics_scene.h"
+
 #include <QMainWindow>
 #include <QCloseEvent>
 
@@ -32,4 +34,5 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+    EditorGraphicsScene *scene;
 };

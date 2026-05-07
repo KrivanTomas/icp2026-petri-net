@@ -13,6 +13,7 @@
 
 #include <QPushButton>
 #include <QMessageBox>
+#include <QSignalMapper>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,11 +22,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     QObject::connect(ui->actionQuit, &QAction::triggered, this, &QMainWindow::close, Qt::QueuedConnection);
+
+    scene = new EditorGraphicsScene(this);
+    scene->setSceneRect(0, 0, 5000, 5000);
+
+    connect(ui->actionModeEdit, &QAction::triggered, scene, &EditorGraphicsScene::setEditMode);
+    connect(ui->actionModeInsert, &QAction::triggered, scene, &EditorGraphicsScene::setInsertMode);
+
+    connect(ui->actionPlace, &QAction::triggered, scene, &EditorGraphicsScene::setInsertObjectPlace);
+    connect(ui->actionTransition, &QAction::triggered, scene, &EditorGraphicsScene::setInsertObjectTransition);
+    connect(ui->actionArc, &QAction::triggered, scene, &EditorGraphicsScene::setInsertObjectArc);
+
+    ui->graphicsView->setScene(scene);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete scene;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
