@@ -333,6 +333,9 @@
     <property name="checked">
      <bool>true</bool>
     </property>
+    <property name="icon">
+     <iconset theme="edit-select-all"/>
+    </property>
     <property name="text">
      <string>Edit</string>
     </property>
