@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(scene, &EditorGraphicsScene::modeChanged, this, &MainWindow::onEditorModeChanged);
 
 
-    ui->insertGroup->setEnabled(false);
+    scene->setMode(EditorGraphicsScene::Mode::Edit);
 
     ui->graphicsView->setScene(scene);
 }

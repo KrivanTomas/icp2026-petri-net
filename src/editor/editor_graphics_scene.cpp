@@ -71,8 +71,32 @@ void EditorGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
                 item->setPos(mouseEvent->scenePos());
                 break;
                                            }
-            case InsertObject::Arc:
+            case InsertObject::Arc: {
+                if(editedArc != nullptr) break;
+                QList<QGraphicsItem*> start_items = items(mouseEvent->scenePos());
+
+                while(start_items.count()) {
+                    EditorPlaceItem *place = qgraphicsitem_cast<EditorPlaceItem*>(start_items.first());
+                    if(place != nullptr) {
+                        editedArc = new EditorArcItem(place, nullptr, nullptr);
+                        addItem(editedArc);
+                        break;
+                    }
+                    EditorTransitionItem *transition = qgraphicsitem_cast<EditorTransitionItem*>(start_items.first());
+                    if(transition != nullptr) {
+                        editedArc = new EditorArcItem(transition, nullptr, nullptr);
+                        addItem(editedArc);
+                        break;
+                    }
+                    start_items.removeFirst();
+                }
+                if(editedArc == nullptr) break;
+                
+                editedArc->setTempDestination(mouseEvent->scenePos());
+                editedArc->updatePosition();
+
                 break;
+                                    }
         }
     }
     
@@ -80,9 +104,54 @@ void EditorGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
 }
 
 void EditorGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) {
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
+    if(editorMode == Mode::Edit) {
+        QGraphicsScene::mouseMoveEvent(mouseEvent);
+        return;
+    }
+    if(editorMode == Mode::Insert && editedArc != nullptr) {
+        QList<QGraphicsItem*> end_items = items(mouseEvent->scenePos());
+
+        while(end_items.count()) {
+            EditorPlaceItem *place = qgraphicsitem_cast<EditorPlaceItem*>(end_items.first());
+            if(place != nullptr && editedArc->getDirection() == EditorArcItem::Direction::TO_PLACE) {
+                editedArc->setPlace(place);
+                editedArc->updatePosition();
+                return;
+            }
+            EditorTransitionItem *transition = qgraphicsitem_cast<EditorTransitionItem*>(end_items.first());
+            if(transition != nullptr && editedArc->getDirection() == EditorArcItem::Direction::TO_TRANSITION) {
+                editedArc->setTransition(transition);
+                editedArc->updatePosition();
+                return;
+            }
+            end_items.removeFirst();
+        }
+
+        if(editedArc->getDirection() == EditorArcItem::Direction::TO_PLACE) {
+            editedArc->unsetPlace();
+        }
+        else if(editedArc->getDirection() == EditorArcItem::Direction::TO_TRANSITION) {
+            editedArc->unsetTransition();
+        }
+        
+        editedArc->setTempDestination(mouseEvent->scenePos());
+        editedArc->updatePosition();
+        return;
+    }
 }
 
 void EditorGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
+    if(editedArc != nullptr) {
+        // TODO place arc if valid
+        if(!editedArc->isValid()) {
+            removeItem(editedArc);
+            delete editedArc;
+        }
+        else {
+            editedArc->getPlace()->addArc(editedArc);
+            editedArc->getTransition()->addArc(editedArc);
+        }
+        editedArc = nullptr;
+    }
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }

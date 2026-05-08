@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "editor_arc_item.h"
+
 #include <QGraphicsScene>
 
 /**
@@ -98,6 +100,9 @@ signals:
 protected:
     Mode editorMode;
     InsertObject insertObject;
+
+    EditorArcItem *editedArc = nullptr;
+
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
