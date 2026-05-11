@@ -73,7 +73,7 @@ public:
      * @brief Sets the last time stamp when place was changed.
      * @param time_ms Time of change in ms.
      */
-    void setLasttimeChange(int time_ms);
+    void setLastTimeChange(int time_ms);
 
 private:
     std::string m_id;
