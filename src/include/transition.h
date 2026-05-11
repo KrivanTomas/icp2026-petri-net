@@ -28,12 +28,12 @@ public:
     /**
      * @brief Gets unique identifier of the transition.
      */
-    std::string getId();
+    std::string getId() const;
 
     /**
      * @brief Gets the name of the input event.
      */
-    std::string getInputEventName();
+    std::string getInputEventName() const;
 
     /**
      * @brief Sets the name of external event.
@@ -44,7 +44,7 @@ public:
     /**
      * @brief Gets guard condition.
      */
-    std::string getGuardcondition();
+    std::string getGuardCondition() const;
 
     /**
      * @brief Sets boolean expression/condition.
@@ -55,7 +55,7 @@ public:
     /**
      * @brief Gets time delay (firing).
      */
-    int getDelay();
+    int getDelay() const;
 
     /**
      * @brief Sets new time delay for firing.
@@ -66,7 +66,7 @@ public:
     /**
      * @brief gets the action code executed by this transition.
      */
-    std::string getActionCode();
+    std::string getActionCode() const;
 
     /**
      * @brief Sets the action code (inscription language).

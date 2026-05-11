@@ -31,22 +31,22 @@ public:
     /**
      * @brief Gets the unique identifier of the arc.
      */
-    std::string getId();
+    std::string getId() const;
 
     /**
      * @brief Gets the unique identifier of the source node.
      */
-    std::string getSourceId();
+    std::string getSourceId() const;
 
     /**
      * @brief Gets the unique identifier of the target node.
      */
-    std::string getTargetId();
+    std::string getTargetId() const;
 
     /**
      * @brief Gets the weight of the arc.
      */
-    int getWeight();
+    int getWeight() const;
 
     /**
      * @brief Sets new weight for the arc.
