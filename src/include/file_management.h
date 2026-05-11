@@ -1,3 +1,11 @@
+/**
+ * @file file_management.cpp
+ *
+ * @brief Header file of json serialization.
+ *
+ * @author
+ *     Tomáš Kudera
+ */
 #pragma once
 
 #include <string>
@@ -19,7 +27,7 @@ struct descriptor {
 /**
  * @brief Loads and saves Petri net and network descriptor as JSON files.
  */
-class FileManager {
+class JsonSerializer {
 public:
     /**
      * @brief Function loads Petri net from a JSON file.

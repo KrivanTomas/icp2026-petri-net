@@ -1,7 +1,7 @@
 /**
  * @file file_management.cpp
  *
- * @brief Implementation of file manager.
+ * @brief Implementation of json serialization.
  *
  * @author
  *     Tomáš Kudera
@@ -15,6 +15,9 @@
 
 using json = nlohmann::json;
 
+/**
+ * @brief Function reads a JSON string field.
+ */
 static std::string jsonToString(const json& object, const std::string& key, const std::string& fallback = "") {
     if(object.contains(key) && object[key].is_string()) {
         return object[key].get<std::string>();
@@ -22,6 +25,9 @@ static std::string jsonToString(const json& object, const std::string& key, cons
     return fallback;
 }
 
+/**
+ * @brief Function reads a JSON integer field with default fallback.
+ */
 static int jsonToInteger(const json& object, const std::string& key, int fallback = 0) {
     if(object.contains(key) && object[key].is_number_integer()) {
         return object[key].get<int>();
@@ -29,13 +35,14 @@ static int jsonToInteger(const json& object, const std::string& key, int fallbac
     return fallback;
 }
 
-bool FileManager::loadFile(const std::string& file, PetriNet& petri_net, descriptor& net_descriptor, std::string& error_msg) {
+bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, descriptor& net_descriptor, std::string& error_msg) {
     std::ifstream input_file(file);
     if(!input_file.is_open()) {
         error_msg = "Cannot open file: " + file;
         return false;
     }
 
+    //parsing JSON
     json jsn;
     try {
         input_file >> jsn;
@@ -45,9 +52,11 @@ bool FileManager::loadFile(const std::string& file, PetriNet& petri_net, descrip
         return false;
     }
 
+    //extraction of name and comment information from network
     net_descriptor.name = jsonToString(jsn, "name");
     net_descriptor.comment = jsonToString(jsn, "comment");
 
+    //extraction of inputs
     net_descriptor.inputs.clear();
     if(jsn.contains("inputs") && jsn["inputs"].is_array()) {
         for(const auto& input : jsn["inputs"]) {
@@ -57,6 +66,7 @@ bool FileManager::loadFile(const std::string& file, PetriNet& petri_net, descrip
         }
     }
     
+    //extraction of declared outputs
     net_descriptor.outputs.clear();
     if(jsn.contains("outputs") && jsn["outputs"].is_array()) {
         for(const auto& output : jsn["outputs"]) {
@@ -66,6 +76,7 @@ bool FileManager::loadFile(const std::string& file, PetriNet& petri_net, descrip
         }
     }
 
+    //extraction of declared variables
     net_descriptor.variables.clear();
     if(jsn.contains("variables") && jsn["variables"].is_array()) {
         for(const auto& var : jsn["variables"]) {
@@ -75,9 +86,11 @@ bool FileManager::loadFile(const std::string& file, PetriNet& petri_net, descrip
         }
     }
 
+    //sync of name and comment into instance of petri net
     petri_net.setName(net_descriptor.name);
     petri_net.setComment(net_descriptor.comment);
 
+    //iteration over array and construction of Place objects
     if(jsn.contains("places") && jsn["places"].is_array()) {
         for(const auto& place_jsn : jsn["places"]) {
             std::string id = jsonToString(place_jsn, "id");
@@ -99,6 +112,8 @@ bool FileManager::loadFile(const std::string& file, PetriNet& petri_net, descrip
         }
     }
 
+    
+    //iteration over array and construction of Transition objects
     if(jsn.contains("transitions") && jsn["transitions"].is_array()) {
         for(const auto& trans_jsn : jsn["transitions"]) {
             std::string id = jsonToString(trans_jsn, "id");
@@ -125,6 +140,8 @@ bool FileManager::loadFile(const std::string& file, PetriNet& petri_net, descrip
         }
     }
 
+    
+    //iteration over array and construction of Arc objects
     if(jsn.contains("arcs") && jsn["arcs"].is_array()) {
         for(const auto& arc_jsn : jsn["arcs"]) {
             std::string id = jsonToString(arc_jsn, "id");
@@ -147,14 +164,16 @@ bool FileManager::loadFile(const std::string& file, PetriNet& petri_net, descrip
     return true;
 }
 
-bool FileManager::saveFile(const std::string& file, const PetriNet& petri_net,const descriptor& net_descriptor, std::string& error_msg) {
+bool JsonSerializer::saveFile(const std::string& file, const PetriNet& petri_net,const descriptor& net_descriptor, std::string& error_msg) {
     json jsn;
+    //descriptor
     jsn["name"] = net_descriptor.name;
     jsn["comment"] = net_descriptor.comment;
     jsn["inputs"] = net_descriptor.inputs;
     jsn["outputs"] = net_descriptor.outputs;
     jsn["variables"] = net_descriptor.variables;
 
+    //serialazation of all places
     jsn["places"] = json::array();
     for(const auto& [id, place] : petri_net.getPlaces()) {
         jsn["places"].push_back({
@@ -164,6 +183,7 @@ bool FileManager::saveFile(const std::string& file, const PetriNet& petri_net,co
         });
     }
 
+    //serialazation of all transitions
     jsn["transitions"] = json::array();
     for(const auto& [id, trans] : petri_net.getTransitions()) {
         jsn["transitions"].push_back({
@@ -175,6 +195,7 @@ bool FileManager::saveFile(const std::string& file, const PetriNet& petri_net,co
         });
     }
 
+    //serialazation of all arcs
     jsn["arcs"] = json::array();
     for(const auto& [id, arc] : petri_net.getArcs()) {
         jsn["arcs"].push_back({
