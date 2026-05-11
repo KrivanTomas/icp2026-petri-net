@@ -42,6 +42,6 @@ int Place::getLastTimeChange() const {
     return m_last_change_time_ms;
 }
 
-void Place::setLasttimeChange(int time_ms) {
+void Place::setLastTimeChange(int time_ms) {
     m_last_change_time_ms = time_ms;
 }
