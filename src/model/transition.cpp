@@ -22,7 +22,7 @@ void Transition::setInputEventName(const std::string& event_name) {
     m_input_event_name = event_name;
 }
 
-std::string Transition::getGuardcondition() const {
+std::string Transition::getGuardCondition() const {
     return m_guard_condition;
 }
     
