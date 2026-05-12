@@ -10,34 +10,41 @@
 
 #include "../include/event.h"
 
-Observer::Observer():list_next(NULL), list_previous(NULL) {};
+Observer::Observer():obs_next(NULL), obs_previous(NULL){};
 
 
-Subject::Subject():list_head(NULL) {};
+Sender::Sender():observer_head(NULL) {};
 
-void Subject::throwEvent(Event event) {
-    Observer* obs = list_head;
+void Sender::throwEvent(Event event) {
+    Observer* obs = observer_head;
     while(obs != NULL) {
         obs->onEvent(event);
-        obs = obs->list_next;
+        obs = obs->obs_next;
+    }
+}
+void Sender::throwEvent(Event event, int a) {
+    Observer* obs = observer_head;
+    while(obs != NULL) {
+        obs->onEvent(event, a);
+        obs = obs->obs_next;
     }
 }
 
-void Subject::addObserver(Observer* observer) {
-    observer->list_next = list_head;
-    list_head = observer;
+void Sender::addObserver(Observer* observer) {
+    observer->obs_next = observer_head;
+    observer_head = observer;
 }
 
-void Subject::removeObserver(Observer* observer){
+void Sender::removeObserver(Observer* observer){
 
     //observer is first in list
-    if(observer == list_head) {
-        list_head = observer->list_next;
-        observer->list_next = NULL;
+    if(observer == observer_head) {
+        observer_head = observer->obs_next;
+        observer->obs_next = NULL;
         return;
     }
 
     //observer is anywhere except head
-    observer->list_previous->list_next = observer->list_next;
-    observer->list_next = NULL;
+    observer->obs_previous->obs_next = observer->obs_next;
+    observer->obs_next = NULL;
 }

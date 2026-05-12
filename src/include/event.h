@@ -9,6 +9,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 enum Event {create_place_, create_transition_, create_arc_, update_tokens_, fire_};
 
@@ -19,7 +20,7 @@ enum Event {create_place_, create_transition_, create_arc_, update_tokens_, fire
  */
 class Observer
 {
-    friend class Subject;
+    friend class Sender;
 
 public:
     /**
@@ -37,44 +38,45 @@ public:
      * @param event Evoked event type
      */
     virtual void onEvent(Event event) {event = event;}
-
+    virtual void onEvent(Event event, int a) {event = event;a=a;}
 
 private:
-    Observer* list_next;
-    Observer* list_previous;
+    Observer* obs_next;
+    Observer* obs_previous;
 };
 
 /**
- * @brief Subject class to "store" observers and notify them of events this class makes by throwEvent().
+ * @brief Sender class to "store" observers and notify them of events this class makes by throwEvent().
  */
-class Subject 
+class Sender
 {
 public:
 
     /**
      * @brief Constructor of a subject
      */
-    Subject();
+    Sender();
 
     /**
      * @brief Adds an observer to this subject's list of listeners
      * @param observer Pointer to the observer
      */
-    void addObserver(Observer* observer);
+    void addObserver(Observer* sender);
 
     /**
      * @brief Removes an observer from this subject's list of listeners
      * @param observer Pointer to the observer
      */
-    void removeObserver(Observer* observer);
+    void removeObserver(Observer* sender);
 
-protected:
     /**
      * @brief Notifies all current observers that something happened
      * @param event Event type
      */
     void throwEvent(Event event);
+    void throwEvent(Event event, int a);
 
 private:
-    Observer* list_head;
+    Observer* observer_head;
+
 };
