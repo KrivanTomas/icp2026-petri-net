@@ -224,12 +224,14 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionModeEdit"/>
+   <addaction name="actionModeInsert"/>
+   <addaction name="separator"/>
+   <addaction name="actionDelete"/>
+   <addaction name="separator"/>
    <addaction name="actionPlace"/>
    <addaction name="actionTransition"/>
    <addaction name="actionArc"/>
-   <addaction name="separator"/>
-   <addaction name="actionModeEdit"/>
-   <addaction name="actionModeInsert"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -282,6 +284,23 @@
   <action name="actionExport">
    <property name="text">
     <string>Export</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="edit-delete"/>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <actiongroup name="insertGroup">

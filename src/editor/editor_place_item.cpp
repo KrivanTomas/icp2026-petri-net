@@ -38,9 +38,9 @@ void EditorPlaceItem::removeArcs()
 {
     const auto arcs_copy = arcs;
     for (EditorArcItem *arc : arcs_copy) {
-        if(arc->getPlace())
+        if(arc->getPlace() != nullptr)
             arc->getPlace()->removeArc(arc);
-        if(arc->getTransition())
+        if(arc->getTransition() != nullptr)
             arc->getTransition()->removeArc(arc);
         scene()->removeItem(arc);
         delete arc;

@@ -31,6 +31,8 @@ public:
 
 public slots:
     void onEditorModeChanged(EditorGraphicsScene::Mode mode);
+    void onEditorSelectionChanged();
+    void onEditorDeleteSelection();
 
 protected:
     void closeEvent(QCloseEvent *event) override;

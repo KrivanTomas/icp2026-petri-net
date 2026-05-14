@@ -34,7 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionArc, &QAction::triggered, scene, &EditorGraphicsScene::setInsertObjectArc);
 
 
+    connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::onEditorDeleteSelection);
     connect(scene, &EditorGraphicsScene::modeChanged, this, &MainWindow::onEditorModeChanged);
+    connect(scene, &EditorGraphicsScene::selectionChanged, this, &MainWindow::onEditorSelectionChanged);
 
 
     scene->setMode(EditorGraphicsScene::Mode::Edit);
@@ -54,6 +56,43 @@ void MainWindow::onEditorModeChanged(EditorGraphicsScene::Mode mode) {
     }
     else {
         ui->insertGroup->setEnabled(false);
+    }
+}
+
+void MainWindow::onEditorSelectionChanged() {
+    QList<QGraphicsItem*> selected = scene->selectedItems();
+    if(selected.count() == 0) {
+        ui->actionDelete->setEnabled(false);
+    }
+    else {
+        ui->actionDelete->setEnabled(true);
+    }
+}
+
+void MainWindow::onEditorDeleteSelection() {
+    QList<QGraphicsItem*> selected = scene->selectedItems();
+    for(QGraphicsItem *item : selected) {
+        if(item->type() == EditorArcItem::Type) {
+            EditorArcItem *arc = qgraphicsitem_cast<EditorArcItem*>(item);
+            arc->getPlace()->removeArc(arc);
+            arc->getTransition()->removeArc(arc);
+            scene->removeItem(item);
+            delete item;
+        }
+    }
+
+    selected = scene->selectedItems();
+    for(QGraphicsItem *item : selected) {
+        EditorPlaceItem *place = qgraphicsitem_cast<EditorPlaceItem*>(item);
+        if(place != nullptr) {
+            place->removeArcs();
+        }
+        EditorTransitionItem *transition = qgraphicsitem_cast<EditorTransitionItem*>(item);
+        if(transition != nullptr) {
+            transition->removeArcs();
+        }
+        scene->removeItem(item);
+        delete item;
     }
 }
 
