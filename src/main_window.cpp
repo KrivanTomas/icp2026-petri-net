@@ -42,12 +42,20 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->setMode(EditorGraphicsScene::Mode::Edit);
 
     ui->graphicsView->setScene(scene);
+
+
+    place_editor_ui = new PlacePropertyEditor();
+    transition_editor_ui = new TransitionPropertyEditor();
+    arc_editor_ui = new ArcPropertyEditor();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete scene;
+    delete place_editor_ui;
+    delete transition_editor_ui;
+    delete arc_editor_ui;
 }
 
 void MainWindow::onEditorModeChanged(EditorGraphicsScene::Mode mode) {
@@ -59,13 +67,77 @@ void MainWindow::onEditorModeChanged(EditorGraphicsScene::Mode mode) {
     }
 }
 
+void MainWindow::setSelectedItem(QGraphicsItem *item) {
+    switch(selected_item_type) {
+        case SelectedItemType::Place:
+            place_editor_ui->setVisible(false);
+            ui->propertiesDockContents->layout()->removeWidget(place_editor_ui);
+            break;
+        case SelectedItemType::Transition:
+            transition_editor_ui->setVisible(false);
+            ui->propertiesDockContents->layout()->removeWidget(transition_editor_ui);
+            break;
+        case SelectedItemType::Arc:
+            arc_editor_ui->setVisible(false);
+            ui->propertiesDockContents->layout()->removeWidget(arc_editor_ui);
+            break;
+        default:
+            break;
+    }
+
+    if(item != nullptr) {
+        EditorPlaceItem *place = qgraphicsitem_cast<EditorPlaceItem*>(item);
+        if(place != nullptr) {
+            selected_item.place_item = place;
+            selected_item_type = SelectedItemType::Place;
+            ui->propertiesDockContents->layout()->addWidget(place_editor_ui);
+            ui->propertiesDock->setWindowTitle("Place Properties");
+            place_editor_ui->setVisible(true);
+            return;
+        }
+        EditorTransitionItem *transition = qgraphicsitem_cast<EditorTransitionItem*>(item);
+        if(transition != nullptr) {
+            selected_item.transition_item = transition;
+            selected_item_type = SelectedItemType::Transition;
+            ui->propertiesDockContents->layout()->addWidget(transition_editor_ui);
+            ui->propertiesDock->setWindowTitle("Transition Properties");
+            transition_editor_ui->setVisible(true);
+            return;
+        }
+        EditorArcItem *arc = qgraphicsitem_cast<EditorArcItem*>(item);
+        if(arc != nullptr) {
+            selected_item.arc_item = arc;
+            selected_item_type = SelectedItemType::Arc;
+            ui->propertiesDockContents->layout()->addWidget(arc_editor_ui);
+            ui->propertiesDock->setWindowTitle("Arc Properties");
+            arc_editor_ui->setVisible(true);
+            return;
+        }
+    }
+
+    ui->propertiesDock->setWindowTitle("Select an item to edit");
+    // If not recognized set to none
+    selected_item.item = nullptr;
+    selected_item_type = SelectedItemType::None;
+}
+
 void MainWindow::onEditorSelectionChanged() {
     QList<QGraphicsItem*> selected = scene->selectedItems();
+
+    // Enable/disable delete action
     if(selected.count() == 0) {
         ui->actionDelete->setEnabled(false);
     }
     else {
         ui->actionDelete->setEnabled(true);
+    }
+
+    // Enable/disable and switch proprties editor panel
+    if(selected.count() == 1) {
+        setSelectedItem(selected.first());
+    }
+    else {
+        setSelectedItem(nullptr);
     }
 }
 
@@ -74,8 +146,10 @@ void MainWindow::onEditorDeleteSelection() {
     for(QGraphicsItem *item : selected) {
         if(item->type() == EditorArcItem::Type) {
             EditorArcItem *arc = qgraphicsitem_cast<EditorArcItem*>(item);
-            arc->getPlace()->removeArc(arc);
-            arc->getTransition()->removeArc(arc);
+            if(arc->getPlace() != nullptr)
+                arc->getPlace()->removeArc(arc);
+            if(arc->getTransition() != nullptr)
+                arc->getTransition()->removeArc(arc);
             scene->removeItem(item);
             delete item;
         }

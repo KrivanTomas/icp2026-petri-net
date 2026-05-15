@@ -38,14 +38,30 @@ target_link_libraries(net_model
 add_library(editor OBJECT
     editor/editor_graphics_scene.cpp 
     include/editor_graphics_scene.h 
+
     editor/editor_node.cpp 
     include/editor_node.h 
+
     editor/editor_place_item.cpp 
     include/editor_place_item.h 
+
     editor/editor_transition_item.cpp 
     include/editor_transition_item.h 
+
     editor/editor_arc_item.cpp 
     include/editor_arc_item.h 
+
+    editor/place_property_editor.cpp
+    include/place_property_editor.h
+    ui/place_property_editor.ui
+
+    editor/transition_property_editor.cpp
+    include/transition_property_editor.h
+    ui/transition_property_editor.ui
+
+    editor/arc_property_editor.cpp
+    include/arc_property_editor.h
+    ui/arc_property_editor.ui
 )
 target_link_libraries(editor 
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
