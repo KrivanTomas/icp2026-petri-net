@@ -55,8 +55,8 @@ public:
     void setWeight(int weight);
 
 private:
-    std::string m_id;
-    std::string m_source_id;
-    std::string m_target_id;
-    int m_weight;
+    std::string id;
+    std::string source_id;
+    std::string target_id;
+    int weight;
 };
