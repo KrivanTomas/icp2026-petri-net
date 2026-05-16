@@ -8,6 +8,21 @@
 
 #include "petrinet.h"
 
+PetriNet::PetriNet(){
+    time_at_start = getCurrentTime();
+}
+
+PetriNet::PetriNet(std::string pnet_name){
+    time_at_start = getCurrentTime();
+    m_name = pnet_name;
+}
+
+PetriNet::PetriNet(std::string pnet_name, std::string pnet_comment){
+    time_at_start = getCurrentTime();
+    m_name = pnet_name;
+    m_comment = pnet_comment;
+}
+
 bool PetriNet::addPlace(const Place& place) {
     if(m_places.find(place.getId()) != m_places.end()) {
         return false;
@@ -84,7 +99,6 @@ std::string PetriNet::getInputValue(const std::string& input_name) const {
 
 void PetriNet::setInputValue(const std::string& input_name, const std::string& value) {
     m_inputs[input_name] = value;
-    m_defined_inputs.insert(input_name);
 }
 
 std::string PetriNet::getVariable(const std::string& var_name) const {
@@ -104,9 +118,7 @@ bool PetriNet::ableToBeFired(const std::string& transition_id) {
     if(m_transitions.find(transition_id) == m_transitions.end()) {
         return false;
     }
-
-    std::string required_event = m_transitions.at(transition_id).getInputEventName();
-    if(!required_event.empty() && required_event != m_event) {
+    if(!m_transitions.at(transition_id).isEnabled()) {
         return false;
     }
 
@@ -152,7 +164,7 @@ bool PetriNet::fire(const std::string& transition_id) {
             
             if(auto place = m_places.find(place_source_id); place != m_places.end()) {
                 place->second.setCurrentTokens(place->second.getCurrentTokens() - tokens_remove);
-                place->second.setLasttimeChange(m_current_time_ms);
+                place->second.setLastTimeChange(m_current_time_ms);
             }
         }
     }
@@ -167,7 +179,7 @@ bool PetriNet::fire(const std::string& transition_id) {
             
             if(auto place = m_places.find(place_target_id); place != m_places.end()) {
                 place->second.setCurrentTokens(place->second.getCurrentTokens() + tokens_add);
-                place->second.setLasttimeChange(m_current_time_ms);
+                place->second.setLastTimeChange(m_current_time_ms);
             }
         }
     }
@@ -176,84 +188,55 @@ bool PetriNet::fire(const std::string& transition_id) {
 
 //setting initial value of tokens for every place
 void PetriNet::reset() {
+    //reset place tokens
     for(auto& place : m_places) {
         place.second.setCurrentTokens(place.second.getInitialTokens());
     }
+    //reset 
+    time_at_start = getCurrentTime();
 }
 
-void PetriNet::runMicroSteps() {
+void PetriNet::fireScheduledTransitions() {
     bool network_change = true;
 
     while(network_change) {
         network_change = false;
-        for(auto& pair : m_transitions) {
-            auto& trans = pair.second;
-            std::string trans_id = trans.getId();
+        for(auto& pair : m_timers) {
+            Transition trans = m_transitions.at(pair.first);
+            std::string trans_id = pair.first;
 
-            if(ableToBeFired(trans_id)) {
-                if(trans.getDelay() > 0) {
-                    bool timer_exists = false;
-                    for(auto& timer : m_timers) {
-                        if(timer.transition_id == trans_id) {
-                            timer_exists = true;
-                            break;
-                        }
-                    }
-                    if(!timer_exists) {
-                        PendingTimer new_timer;
-                        new_timer.transition_id = trans_id;
-                        new_timer.target_time_ms = m_current_time_ms + trans.getDelay();
-                        m_timers.push_back(new_timer);
-                    }
+            if(trans.getDelay() <= 0 && trans.isEnabled()) {
+
+                if(fire(trans_id)) {
+                    // another transition MAY be able to fire now
+                    network_change = true;
+
                 }
-                else {
-                    if(fire(trans_id)) {
-                        network_change = true;
-                    }
-                }
-                
+                //remove the timer from scheduled timers even if it was not enabled
+                m_timers.erase(trans_id);
             }
         }
     }
 }
 
-void PetriNet::updateTime(int64_t current_time_ms) {
-    m_current_time_ms = current_time_ms;
-    bool timer_fired = false;
-
-    for(auto it = m_timers.begin(); it != m_timers.end(); ) {
-        if(m_current_time_ms >= it->target_time_ms) {
-            std::string t_id = it->transition_id;
-            if(ableToBeFired(t_id)) {
-                fire(t_id);
-                timer_fired = true;
-            }
-            it = m_timers.erase(it);
-        }
-        else {
-            it++;
-        }
-    } 
-    if(timer_fired) {
-        runMicroSteps();
-    }
+void PetriNet::updateTime() {
+    m_current_time_ms = getCurrentTime() - time_at_start; 
 }
 
 int PetriNet::petriNetInternalTime() const {
     return m_current_time_ms;
 }
 
-bool PetriNet::isDefined(const std::string& input_name) const {
-    if(m_defined_inputs.find(input_name) != m_defined_inputs.end()) {
+int64_t PetriNet::getCurrentTime() const {
+    return (std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::system_clock::now().time_since_epoch())).count();
+}
+
+bool PetriNet::isInputDefined(const std::string& input_name) const {
+    if(m_inputs.find(input_name) != m_inputs.end()) {
         return true;
     }
     return false;
-}
-
-void PetriNet::triggerEvent(const std::string& event) {
-    m_event = event;
-    runMicroSteps();
-    m_event = "";
 }
 
 const std::map<std::string, Place>& PetriNet::getPlaces() const {

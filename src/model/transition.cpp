@@ -8,7 +8,7 @@
 
 #include "transition.h"
 
-Transition::Transition(const std::string& id) : m_id(id), m_delay_ms(0) {}
+Transition::Transition(const std::string& id) : m_id(id), m_delay_ms(0), enabled(false) {}
 
 std::string Transition::getId() const {
     return m_id;
@@ -30,11 +30,11 @@ void Transition::setGuardCondition(const std::string& condition) {
     m_guard_condition = condition;
 }
 
-int Transition::getDelay() const {
+int64_t Transition::getDelay() const {
     return m_delay_ms;
 }
     
-void Transition::setDelay(int delay_in_ms) {
+void Transition::setDelay(int64_t delay_in_ms) {
     m_delay_ms = delay_in_ms;
 }
 
@@ -44,4 +44,12 @@ std::string Transition::getActionCode() const {
     
 void Transition::setActionCode(const std::string& action_code) {
     m_action_code = action_code;
+}
+
+bool Transition::isEnabled() const {
+    return enabled;
+}
+
+void Transition::setEnabled(bool set_enabled) {
+    enabled = set_enabled;
 }
