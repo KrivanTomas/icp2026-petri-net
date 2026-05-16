@@ -138,6 +138,11 @@ public:
     void reset();
 
     /**
+     * @brief Clear the whole network
+     */
+    void clear();
+
+    /**
      * @brief Main simulation loop. Performs the maximum number of independent firings 
      * and stabilizes the network (microsteps). Handles only instantaneous transitions. 
      */
