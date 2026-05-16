@@ -14,28 +14,28 @@ PetriNet::PetriNet(){
 
 PetriNet::PetriNet(std::string pnet_name){
     time_at_start = getCurrentTime();
-    m_name = pnet_name;
+    net_name = pnet_name;
 }
 
 PetriNet::PetriNet(std::string pnet_name, std::string pnet_comment){
     time_at_start = getCurrentTime();
-    m_name = pnet_name;
-    m_comment = pnet_comment;
+    net_name = pnet_name;
+    net_comment = pnet_comment;
 }
 
 bool PetriNet::addPlace(const Place& place) {
-    if(m_places.find(place.getId()) != m_places.end()) {
+    if(places.find(place.getId()) != places.end()) {
         return false;
     }
-    m_places.emplace(place.getId(), place);
+    places.emplace(place.getId(), place);
     return true;
 }
 
 bool PetriNet::addTransition(const Transition& transition) {
-    if(m_transitions.find(transition.getId()) != m_transitions.end()) {
+    if(transitions.find(transition.getId()) != transitions.end()) {
         return false;
     }
-    m_transitions.emplace(transition.getId(), transition);
+    transitions.emplace(transition.getId(), transition);
     return true;
 }
 
@@ -43,11 +43,11 @@ bool PetriNet::addArcs(const Arc& arc) {
     std::string source_ID = arc.getSourceId();
     std::string target_ID = arc.getTargetId();
 
-    bool source_is_place = m_places.find(source_ID) != m_places.end();
-    bool source_is_transition = m_transitions.find(source_ID) != m_transitions.end();
+    bool source_is_place = places.find(source_ID) != places.end();
+    bool source_is_transition = transitions.find(source_ID) != transitions.end();
 
-    bool target_is_place = m_places.find(target_ID) != m_places.end();
-    bool target_is_transition = m_transitions.find(target_ID) != m_transitions.end();
+    bool target_is_place = places.find(target_ID) != places.end();
+    bool target_is_transition = transitions.find(target_ID) != transitions.end();
 
     if(!(source_is_place || source_is_transition)) {
         return false;
@@ -65,64 +65,64 @@ bool PetriNet::addArcs(const Arc& arc) {
         return false;
     }
 
-    if(m_arcs.find(arc.getId()) != m_arcs.end()) {
+    if(arcs.find(arc.getId()) != arcs.end()) {
         return false;
     }
 
-    m_arcs.emplace(arc.getId(), arc);
+    arcs.emplace(arc.getId(), arc);
     return true;
 }
 
 std::string PetriNet::getName() const {
-    return m_name;
+    return net_name;
 }
 
 void PetriNet::setName(const std::string& name) {
-    m_name = name;
+    net_name = name;
 }
 
 std::string PetriNet::getComment() const {
-    return m_comment;
+    return net_comment;
 }
 
 void PetriNet::setComment(const std::string& comment) {
-    m_comment = comment;
+    net_comment = comment;
 }
 
 std::string PetriNet::getInputValue(const std::string& input_name) const {
-    auto it = m_inputs.find(input_name);
-    if(it != m_inputs.end()) {
+    auto it = internal_inputs.find(input_name);
+    if(it != internal_inputs.end()) {
         return it->second;
     }
     return "";
 }
 
 void PetriNet::setInputValue(const std::string& input_name, const std::string& value) {
-    m_inputs[input_name] = value;
+    internal_inputs[input_name] = value;
 }
 
 std::string PetriNet::getVariable(const std::string& var_name) const {
-    auto it = m_variables.find(var_name);
-    if(it != m_variables.end()) {
+    auto it = internal_variables.find(var_name);
+    if(it != internal_variables.end()) {
         return it->second;
     }
     return "";
 }
 
 void PetriNet::setVariable(const std::string& var_name, const std::string& value) {
-    m_variables[var_name] = value;
+    internal_variables[var_name] = value;
 }
 
 bool PetriNet::ableToBeFired(const std::string& transition_id) {
     //check if transition with this ID exists
-    if(m_transitions.find(transition_id) == m_transitions.end()) {
+    if(transitions.find(transition_id) == transitions.end()) {
         return false;
     }
-    if(!m_transitions.at(transition_id).isEnabled()) {
+    if(!transitions.at(transition_id).isEnabled()) {
         return false;
     }
 
-    for(auto& pair : m_arcs) {
+    for(auto& pair : arcs) {
         auto& arc = pair.second;
         //if arc points into this transition
         if(arc.getTargetId() == transition_id) {
@@ -133,7 +133,7 @@ bool PetriNet::ableToBeFired(const std::string& transition_id) {
             bool enough_tokens = false;
 
             //
-            if(auto place = m_places.find(place_source_id); place != m_places.end()){
+            if(auto place = places.find(place_source_id); place != places.end()){
                 if(place->second.getCurrentTokens() >= requiredTokens) {
                     enough_tokens = true;
                 }
@@ -155,31 +155,31 @@ bool PetriNet::fire(const std::string& transition_id) {
     }
 
     //removing tokens
-    for(auto& pair : m_arcs) {
+    for(auto& pair : arcs) {
         auto& arc = pair.second;
         if(arc.getTargetId() == transition_id) {
             std::string place_source_id = arc.getSourceId();
             int tokens_remove = arc.getWeight();
 
             
-            if(auto place = m_places.find(place_source_id); place != m_places.end()) {
+            if(auto place = places.find(place_source_id); place != places.end()) {
                 place->second.setCurrentTokens(place->second.getCurrentTokens() - tokens_remove);
-                place->second.setLastTimeChange(m_current_time_ms);
+                place->second.setLastTimeChange(current_time_ms);
             }
         }
     }
 
     //adding of tokens
-    for(auto& pair : m_arcs) {
+    for(auto& pair : arcs) {
         auto& arc = pair.second;
         //if arc exits out of this transition, then it is an exit arc
         if(arc.getSourceId() == transition_id) {
             std::string place_target_id = arc.getTargetId();
             int tokens_add = arc.getWeight();
             
-            if(auto place = m_places.find(place_target_id); place != m_places.end()) {
+            if(auto place = places.find(place_target_id); place != places.end()) {
                 place->second.setCurrentTokens(place->second.getCurrentTokens() + tokens_add);
-                place->second.setLastTimeChange(m_current_time_ms);
+                place->second.setLastTimeChange(current_time_ms);
             }
         }
     }
@@ -189,7 +189,7 @@ bool PetriNet::fire(const std::string& transition_id) {
 //setting initial value of tokens for every place
 void PetriNet::reset() {
     //reset place tokens
-    for(auto& place : m_places) {
+    for(auto& place : places) {
         place.second.setCurrentTokens(place.second.getInitialTokens());
     }
     //reset 
@@ -201,8 +201,8 @@ void PetriNet::fireScheduledTransitions() {
 
     while(network_change) {
         network_change = false;
-        for(auto& pair : m_timers) {
-            Transition trans = m_transitions.at(pair.first);
+        for(auto& pair : scheduled_timers) {
+            Transition trans = transitions.at(pair.first);
             std::string trans_id = pair.first;
 
             if(trans.getDelay() <= 0 && trans.isEnabled()) {
@@ -213,18 +213,18 @@ void PetriNet::fireScheduledTransitions() {
 
                 }
                 //remove the timer from scheduled timers even if it was not enabled
-                m_timers.erase(trans_id);
+                scheduled_timers.erase(trans_id);
             }
         }
     }
 }
 
 void PetriNet::updateTime() {
-    m_current_time_ms = getCurrentTime() - time_at_start; 
+    current_time_ms = getCurrentTime() - time_at_start; 
 }
 
 int PetriNet::petriNetInternalTime() const {
-    return m_current_time_ms;
+    return current_time_ms;
 }
 
 int64_t PetriNet::getCurrentTime() const {
@@ -233,20 +233,20 @@ int64_t PetriNet::getCurrentTime() const {
 }
 
 bool PetriNet::isInputDefined(const std::string& input_name) const {
-    if(m_inputs.find(input_name) != m_inputs.end()) {
+    if(internal_inputs.find(input_name) != internal_inputs.end()) {
         return true;
     }
     return false;
 }
 
 const std::map<std::string, Place>& PetriNet::getPlaces() const {
-    return m_places;
+    return places;
 }
 
 const std::map<std::string, Transition>& PetriNet::getTransitions() const {
-    return m_transitions;
+    return transitions;
 }
 
 const std::map<std::string, Arc>& PetriNet::getArcs() const {
-    return m_arcs;
+    return arcs;
 }

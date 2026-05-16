@@ -8,24 +8,25 @@
 
 #include "arc.h"
 
-Arc::Arc(const std::string& id, const std::string& source_id, const std::string& target_id, int weight) : m_id(id), m_source_id(source_id), m_target_id(target_id), m_weight(weight){}
+Arc::Arc(const std::string& id, const std::string& source_id, const std::string& target_id, int weight) : 
+    id(id), source_id(source_id), target_id(target_id), weight(weight){}
 
 std::string Arc::getId() const {
-    return m_id;
+    return id;
 }
 
 std::string Arc::getSourceId() const {
-    return m_source_id;
+    return source_id;
 }
 
 std::string Arc::getTargetId() const {
-    return m_target_id;
+    return target_id;
 }
 
 int Arc::getWeight() const {
-    return m_weight;
+    return weight;
 }
 
 void Arc::setWeight(int weight) {
-    m_weight = weight;
+    weight = weight;
 }

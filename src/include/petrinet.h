@@ -172,17 +172,17 @@ public:
     const std::map<std::string, Arc>& getArcs() const;
 
 private:
-    std::string m_name = "Unknown petrinet";
-    std::string m_comment = "";
+    std::string net_name = "Unknown petrinet";
+    std::string net_comment = "";
 
-    std::map<std::string, std::string> m_inputs;
-    std::map<std::string, std::string> m_variables;
+    std::map<std::string, std::string> internal_inputs;
+    std::map<std::string, std::string> internal_variables;
 
-    std::map<std::string, Place> m_places;
-    std::map<std::string, Transition> m_transitions;
-    std::map<std::string, Arc> m_arcs;
+    std::map<std::string, Place> places;
+    std::map<std::string, Transition> transitions;
+    std::map<std::string, Arc> arcs;
 
     int64_t time_at_start = 0;
-    int64_t m_current_time_ms = 0;
-    std::map<std::string, int64_t> m_timers;
+    int64_t current_time_ms = 0;
+    std::map<std::string, int64_t> scheduled_timers;
 };

@@ -76,9 +76,9 @@ public:
     void setLastTimeChange(int64_t time_ms);
 
 private:
-    std::string m_id;
-    int m_initial_tokens;
-    int m_current_tokens;
-    std::string m_action_code;
-    int64_t m_last_change_time_ms = 0;
+    std::string id;
+    int initial_tokens;
+    int current_tokens;
+    std::string action_code;
+    int64_t last_change_time_ms = 0;
 };

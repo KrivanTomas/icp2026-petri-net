@@ -86,10 +86,10 @@ public:
     void setEnabled(bool enabled);
 
 private:
-    std::string m_id;
-    std::string m_input_event_name;
-    std::string m_guard_condition;
-    int m_delay_ms;
-    std::string m_action_code;
+    std::string id;
+    std::string input_event_name;
+    std::string guard_condition;
+    int delay_ms;
+    std::string action_code;
     bool enabled;
 };
