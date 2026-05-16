@@ -186,7 +186,6 @@ bool PetriNet::fire(const std::string& transition_id) {
     return true;
 }
 
-//setting initial value of tokens for every place
 void PetriNet::reset() {
     //reset place tokens
     for(auto& place : places) {
@@ -194,6 +193,20 @@ void PetriNet::reset() {
     }
     //reset 
     time_at_start = getCurrentTime();
+}
+
+void PetriNet::clear() {
+    //reset place tokens
+    places.clear();
+    transitions.clear();
+    arcs.clear();
+    internal_inputs.clear();
+    internal_variables.clear();
+    scheduled_timers.clear();
+    time_at_start = 0;
+    current_time_ms = 0;
+    net_name = "Unknown petrinet";
+    net_comment = "";
 }
 
 void PetriNet::fireScheduledTransitions() {
