@@ -7,7 +7,7 @@
  *     Tomáš Kudera
  */
 
-#include "include/file_management.h"
+#include "include/json_serializer.h"
 #include "nlohmann/json.hpp"
 
 #include <fstream>
