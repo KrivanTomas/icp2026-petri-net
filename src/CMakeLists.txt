@@ -26,6 +26,8 @@ add_library(net_model
     model/place.cpp 
     model/transition.cpp
     model/arc.cpp 
+    file_management.cpp
+    include/file_management.h
     include/petrinet.h 
     include/place.h 
     include/transition.h 
@@ -62,3 +64,5 @@ set_target_properties(main
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
 )
+
+target_link_libraries(net_model PRIVATE nlohmann_json::nlohmann_json)
