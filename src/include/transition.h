@@ -44,7 +44,7 @@ public:
     /**
      * @brief Gets guard condition.
      */
-    std::string getGuardcondition() const;
+    std::string getGuardCondition() const;
 
     /**
      * @brief Sets boolean expression/condition.

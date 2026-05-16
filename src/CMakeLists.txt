@@ -26,8 +26,8 @@ add_library(net_model
     model/place.cpp 
     model/transition.cpp
     model/arc.cpp 
-    file_management.cpp
-    include/file_management.h
+    json_serializer.cpp
+    include/json_serializer.h
     include/petrinet.h 
     include/place.h 
     include/transition.h 
