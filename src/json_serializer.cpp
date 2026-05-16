@@ -189,7 +189,7 @@ bool JsonSerializer::saveFile(const std::string& file, const PetriNet& petri_net
         jsn["transitions"].push_back({
             {"id", trans.getId() },
             {"input_event", trans.getInputEventName()},
-            {"guard", trans.getGuardcondition()},
+            {"guard", trans.getGuardCondition()},
             {"delay_ms", trans.getDelay()},
             {"action_code", trans.getActionCode()}
         });
