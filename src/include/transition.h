@@ -55,13 +55,13 @@ public:
     /**
      * @brief Gets time delay (firing).
      */
-    int getDelay() const;
+    int64_t getDelay() const;
 
     /**
      * @brief Sets new time delay for firing.
      * @param delay Delay in miliseconds.
      */
-    void setDelay(int delay_in_ms);
+    void setDelay(int64_t delay_in_ms);
 
     /**
      * @brief gets the action code executed by this transition.
@@ -74,10 +74,22 @@ public:
      */
     void setActionCode(const std::string& action_code);
 
+    /**
+     * @brief gets the enabled state.
+     */
+    bool isEnabled() const;
+
+    /**
+     * @brief Sets the state of the transition to enabled or not enabled.
+     * @param enabled Boolean value to set.
+     */
+    void setEnabled(bool enabled);
+
 private:
-    std::string m_id;
-    std::string m_input_event_name;
-    std::string m_guard_condition;
-    int m_delay_ms;
-    std::string m_action_code;
+    std::string id;
+    std::string input_event_name;
+    std::string guard_condition;
+    int delay_ms;
+    std::string action_code;
+    bool enabled;
 };
