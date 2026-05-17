@@ -1,11 +1,12 @@
 /**
- * @file file_management.cpp
+ * @file json_serializer.h
  *
  * @brief Header file of json serialization.
  *
  * @author
  *     Tomáš Kudera
  */
+
 #pragma once
 
 #include <string>
