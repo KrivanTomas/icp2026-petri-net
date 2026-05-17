@@ -18,12 +18,12 @@ TEST(Structure, BipartiteGraph) {
     test_net.addTransition(Transition("T1"));
     test_net.addTransition(Transition("T2"));
 
-    EXPECT_TRUE(test_net.addArcs(Arc("A1", "P1", "T1")));
-    EXPECT_TRUE(test_net.addArcs(Arc("A2", "T1", "P2")));
+    EXPECT_TRUE(test_net.addArc(Arc("A1", "P1", "T1")));
+    EXPECT_TRUE(test_net.addArc(Arc("A2", "T1", "P2")));
 
-    EXPECT_FALSE(test_net.addArcs(Arc("A3", "P1", "P2")));
-    EXPECT_FALSE(test_net.addArcs(Arc("A4", "T1", "T2")));
-    EXPECT_FALSE(test_net.addArcs(Arc("A5", "kudy", "P2")));
+    EXPECT_FALSE(test_net.addArc(Arc("A3", "P1", "P2")));
+    EXPECT_FALSE(test_net.addArc(Arc("A4", "T1", "T2")));
+    EXPECT_FALSE(test_net.addArc(Arc("A5", "kudy", "P2")));
 }
 
 TEST(Data, InputsVariables) {

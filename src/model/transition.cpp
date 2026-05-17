@@ -14,6 +14,10 @@ std::string Transition::getId() const {
     return id;
 }
 
+void Transition::setId(std::string new_id) {
+    id = new_id;
+}
+
 std::string Transition::getInputEventName() const {
     return input_event_name;
 }

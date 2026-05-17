@@ -63,8 +63,49 @@ public:
      * @param arc The arc to be added.
      * @return true if an arc was added, else false
      */
-    bool addArcs(const Arc &arc);
+    bool addArc(const Arc &arc);
 
+    /**
+     * @brief Changes the id of a place in this petrinet
+     * @param old_id Id of the current place
+     * @param new_id New id to replace the current one
+     * @throw <id_already_in_use> if new_id is already in use
+     */
+    void changePlaceId(std::string old_id, std::string new_id);
+
+    /**
+     * @brief Changes the id of a transition in this petrinet
+     * @param old_id Id of the current transition
+     * @param new_id New id to replace the current one
+     * @throw <id_already_in_use> if new_id is already in use
+     */
+    void changeTransitionId(std::string old_id, std::string new_id);
+
+    /**
+     * @brief Changes the id of an arc in this petrinet
+     * @param old_id Id of the current arc
+     * @param new_id New id to replace the current one
+     * @throw <id_already_in_use> if new_id is already in use
+     */
+    void changeArcId(std::string old_id, std::string new_id);
+
+    /** 
+     * @brief Removes a place from this petrinet
+     * @param place_id Id of the place
+    */
+    void removePlace(std::string place_id);
+
+    /** 
+     * @brief Removes a transition from this petrinet
+     * @param transition_id Id of the transition
+    */
+    void removeTransition(std::string transition_id);
+
+    /** 
+     * @brief Removes an arc from this petrinet
+     * @param place_id Id of the arc
+    */
+    void removeArc(std::string arc_id);
     /**
      * @brief Gets the name of PetriNet.
      * @return Name of the PetriNet.
