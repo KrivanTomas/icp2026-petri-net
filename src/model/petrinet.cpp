@@ -3,23 +3,22 @@
  *
  * @author
  *     Tomáš Kudera
+ *     Lukáš Kurtin
  */
 
 
 #include "petrinet.h"
-#include <stdexcept>
+
 
 PetriNet::PetriNet(){
-    time_at_start = getCurrentTime();
+    
 }
 
 PetriNet::PetriNet(std::string pnet_name){
-    time_at_start = getCurrentTime();
     net_name = pnet_name;
 }
 
 PetriNet::PetriNet(std::string pnet_name, std::string pnet_comment){
-    time_at_start = getCurrentTime();
     net_name = pnet_name;
     net_comment = pnet_comment;
 }
@@ -205,86 +204,12 @@ void PetriNet::setVariable(const std::string& var_name, const std::string& value
     internal_variables[var_name] = value;
 }
 
-bool PetriNet::ableToBeFired(const std::string& transition_id) {
-    //check if transition with this ID exists
-    if(transitions.find(transition_id) == transitions.end()) {
-        return false;
-    }
-    if(!transitions.at(transition_id).isEnabled()) {
-        return false;
-    }
-
-    for(auto& pair : arcs) {
-        auto& arc = pair.second;
-        //if arc points into this transition
-        if(arc.getTargetId() == transition_id) {
-            std::string place_source_id = arc.getSourceId();
-            int requiredTokens = arc.getWeight();
-            
-            //finding of the entry point and checking tokens
-            bool enough_tokens = false;
-
-            //
-            if(auto place = places.find(place_source_id); place != places.end()){
-                if(place->second.getCurrentTokens() >= requiredTokens) {
-                    enough_tokens = true;
-                }
-            }
-            
-            //if place was not found or there were not enough tokens, then the transition can not be fired
-            if(!enough_tokens) {
-                return false;
-            }
-        }
-    }
-    //if all entry points were found and none of them failed, then transition is ready to be fired
-    return true;
-}
-
-bool PetriNet::fire(const std::string& transition_id) {
-    if(!ableToBeFired(transition_id)) {
-        return false;
-    }
-
-    //removing tokens
-    for(auto& pair : arcs) {
-        auto& arc = pair.second;
-        if(arc.getTargetId() == transition_id) {
-            std::string place_source_id = arc.getSourceId();
-            int tokens_remove = arc.getWeight();
-
-            
-            if(auto place = places.find(place_source_id); place != places.end()) {
-                place->second.setCurrentTokens(place->second.getCurrentTokens() - tokens_remove);
-                place->second.setLastTimeChange(current_time_ms);
-            }
-        }
-    }
-
-    //adding of tokens
-    for(auto& pair : arcs) {
-        auto& arc = pair.second;
-        //if arc exits out of this transition, then it is an exit arc
-        if(arc.getSourceId() == transition_id) {
-            std::string place_target_id = arc.getTargetId();
-            int tokens_add = arc.getWeight();
-            
-            if(auto place = places.find(place_target_id); place != places.end()) {
-                place->second.setCurrentTokens(place->second.getCurrentTokens() + tokens_add);
-                place->second.setLastTimeChange(current_time_ms);
-            }
-        }
-    }
-    return true;
-}
 
 void PetriNet::reset() {
     //reset place tokens
     for(auto& place : places) {
         place.second.setCurrentTokens(place.second.getInitialTokens());
     }
-    //reset starting time
-    time_at_start = getCurrentTime();
 }
 
 void PetriNet::clear() {
@@ -293,47 +218,8 @@ void PetriNet::clear() {
     arcs.clear();
     internal_inputs.clear();
     internal_variables.clear();
-    scheduled_timers.clear();
-    time_at_start = 0;
-    current_time_ms = 0;
     net_name = "Unknown petrinet";
     net_comment = "";
-}
-
-void PetriNet::fireScheduledTransitions() {
-    bool network_change = true;
-
-    while(network_change) {
-        network_change = false;
-        for(auto& pair : scheduled_timers) {
-            Transition trans = transitions.at(pair.first);
-            std::string trans_id = pair.first;
-
-            if(trans.getDelay() <= 0 && trans.isEnabled()) {
-
-                if(fire(trans_id)) {
-                    // another transition MAY be able to fire now
-                    network_change = true;
-
-                }
-                //remove the timer from scheduled timers even if it was not enabled
-                scheduled_timers.erase(trans_id);
-            }
-        }
-    }
-}
-
-void PetriNet::updateTime() {
-    current_time_ms = getCurrentTime() - time_at_start; 
-}
-
-int PetriNet::petriNetInternalTime() const {
-    return current_time_ms;
-}
-
-int64_t PetriNet::getCurrentTime() const {
-    return (std::chrono::duration_cast<std::chrono::milliseconds>
-        (std::chrono::system_clock::now().time_since_epoch())).count();
 }
 
 bool PetriNet::isInputDefined(const std::string& input_name) const {

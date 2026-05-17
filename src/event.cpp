@@ -8,9 +8,7 @@
  *     Lukáš Kurtin
  */
 
-#include "../include/event.h"
-
-Observer::Observer():obs_next(NULL), obs_previous(NULL){};
+#include "include/event.h"
 
 
 Sender::Sender():observer_head(NULL) {};
@@ -22,13 +20,29 @@ void Sender::throwEvent(Event event) {
         obs = obs->obs_next;
     }
 }
-void Sender::throwEvent(Event event, int a) {
+void Sender::throwEvent(Event event, int number) {
     Observer* obs = observer_head;
     while(obs != NULL) {
-        obs->onEvent(event, a);
+        obs->onEvent(event, number);
         obs = obs->obs_next;
     }
 }
+void Sender::throwEvent(Event event, std::string str) {
+    Observer* obs = observer_head;
+    while(obs != NULL) {
+        obs->onEvent(event, str);
+        obs = obs->obs_next;
+    }
+}
+
+void Sender::throwEvent(Event event, std::string str, int number) {
+    Observer* obs = observer_head;
+    while(obs != nullptr) {
+        obs->onEvent(event, str, number);
+        obs = obs->obs_next;
+    }
+}
+
 
 void Sender::addObserver(Observer* observer) {
     observer->obs_next = observer_head;
