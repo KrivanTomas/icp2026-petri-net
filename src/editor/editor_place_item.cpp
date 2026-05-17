@@ -68,14 +68,16 @@ std::string EditorPlaceItem::getId() const {
 void EditorPlaceItem::setTokens(int tokens) {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getPlaces().find(model_id) == net->getPlaces().end()) throw std::runtime_error("setTokens(): Model desync");
+    if(net->getPlaces().find(model_id) == net->getPlaces().end())
+        throw std::runtime_error("EditorPlaceItem::setTokens(): Model desync");
     net->getPlaces().at(model_id).setCurrentTokens(tokens);
 }
 
 int EditorPlaceItem::getTokens() const {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getPlaces().find(model_id) == net->getPlaces().end()) throw std::runtime_error("getTokens(): Model desync");
+    if(net->getPlaces().find(model_id) == net->getPlaces().end())
+        throw std::runtime_error("EditorPlaceItem::getTokens(): Model desync");
 
     return net->getPlaces().at(model_id).getCurrentTokens();
 }
@@ -83,7 +85,8 @@ int EditorPlaceItem::getTokens() const {
 void EditorPlaceItem::setActions(std::string actions) {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getPlaces().find(model_id) == net->getPlaces().end()) throw std::runtime_error("setActions(): Model desync");
+    if(net->getPlaces().find(model_id) == net->getPlaces().end())
+        throw std::runtime_error("EditorPlaceItem::setActions(): Model desync");
 
     net->getPlaces().at(model_id).setActionCode(actions);
 }
@@ -91,7 +94,8 @@ void EditorPlaceItem::setActions(std::string actions) {
 std::string EditorPlaceItem::getActions() const {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getPlaces().find(model_id) == net->getPlaces().end()) throw std::runtime_error("getActions(): Model desync");
+    if(net->getPlaces().find(model_id) == net->getPlaces().end())
+        throw std::runtime_error("EditorPlaceItem::getActions(): Model desync");
 
     return net->getPlaces().at(model_id).getActionCode();
 }

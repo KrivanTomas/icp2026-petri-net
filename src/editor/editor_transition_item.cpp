@@ -66,14 +66,16 @@ std::string EditorTransitionItem::getId() const {
 void EditorTransitionItem::setDelay(std::int64_t delay) {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getTransitions().find(model_id) == net->getTransitions().end()) throw std::runtime_error("Model desync");
+    if(net->getTransitions().find(model_id) == net->getTransitions().end()) 
+        throw std::runtime_error("EditorTransitionItem::setDelay(): Model desync");
     net->getTransitions().at(model_id).setDelay(delay);
 }
 
 std::int64_t EditorTransitionItem::getDelay() const {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getTransitions().find(model_id) == net->getTransitions().end()) throw std::runtime_error("Model desync");
+    if(net->getTransitions().find(model_id) == net->getTransitions().end())
+        throw std::runtime_error("EditorTransitionItem::getDelay(): Model desync");
 
     return net->getTransitions().at(model_id).getDelay();
 }
@@ -81,7 +83,8 @@ std::int64_t EditorTransitionItem::getDelay() const {
 void EditorTransitionItem::setActions(std::string actions) {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getTransitions().find(model_id) == net->getTransitions().end()) throw std::runtime_error("Model desync");
+    if(net->getTransitions().find(model_id) == net->getTransitions().end())
+        throw std::runtime_error("EditorTransitionItem::setActions(): Model desync");
 
     net->getTransitions().at(model_id).setActionCode(actions);
 }
@@ -89,7 +92,8 @@ void EditorTransitionItem::setActions(std::string actions) {
 std::string EditorTransitionItem::getActions() const {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getTransitions().find(model_id) == net->getTransitions().end()) throw std::runtime_error("Model desync");
+    if(net->getTransitions().find(model_id) == net->getTransitions().end())
+        throw std::runtime_error("EditorTransitionItem::getActions(): Model desync");
 
     return net->getTransitions().at(model_id).getActionCode();
 }
@@ -97,7 +101,8 @@ std::string EditorTransitionItem::getActions() const {
 void EditorTransitionItem::setGuardCondition(std::string condition) {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getTransitions().find(model_id) == net->getTransitions().end()) throw std::runtime_error("Model desync");
+    if(net->getTransitions().find(model_id) == net->getTransitions().end())
+        throw std::runtime_error("EditorTransitionItem::setGuardCondition(): Model desync");
 
     net->getTransitions().at(model_id).setGuardCondition(condition);
 }
@@ -105,7 +110,8 @@ void EditorTransitionItem::setGuardCondition(std::string condition) {
 std::string EditorTransitionItem::getGuardCondition() const {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getTransitions().find(model_id) == net->getTransitions().end()) throw std::runtime_error("Model desync");
+    if(net->getTransitions().find(model_id) == net->getTransitions().end())
+        throw std::runtime_error("EditorTransitionItem::getGuardCondition(): Model desync");
 
     return net->getTransitions().at(model_id).getGuardCondition();
 }
@@ -113,7 +119,8 @@ std::string EditorTransitionItem::getGuardCondition() const {
 void EditorTransitionItem::setInputEvent(std::string event) {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getTransitions().find(model_id) == net->getTransitions().end()) throw std::runtime_error("Model desync");
+    if(net->getTransitions().find(model_id) == net->getTransitions().end())
+        throw std::runtime_error("EditorTransitionItem::setInputEvent(): Model desync");
 
     net->getTransitions().at(model_id).setInputEventName(event);
 }
@@ -121,7 +128,8 @@ void EditorTransitionItem::setInputEvent(std::string event) {
 std::string EditorTransitionItem::getInputEvent() const {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
-    if(net->getTransitions().find(model_id) == net->getTransitions().end()) throw std::runtime_error("Model desync");
+    if(net->getTransitions().find(model_id) == net->getTransitions().end())
+        throw std::runtime_error("EditorTransitionItem::getInputEvent(): Model desync");
 
     return net->getTransitions().at(model_id).getInputEventName();
 }
