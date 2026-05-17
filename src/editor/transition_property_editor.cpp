@@ -9,6 +9,7 @@
 
 #include "../include/transition_property_editor.h"
 #include "../ui/ui_transition_property_editor.h"
+#include "../include/id_validator.h"
 
 TransitionPropertyEditor::TransitionPropertyEditor(QWidget *parent) :
     QWidget(parent),
@@ -16,11 +17,13 @@ TransitionPropertyEditor::TransitionPropertyEditor(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->TransitionIdLineEdit, &QLineEdit::textChanged, this, &TransitionPropertyEditor::updateModelId);
+    connect(ui->TransitionIdLineEdit, &QLineEdit::editingFinished, this, &TransitionPropertyEditor::updateModelId);
     connect(ui->inputEventLineEdit, &QLineEdit::textChanged, this, &TransitionPropertyEditor::updateModelInputEvent);
     connect(ui->delaySpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &TransitionPropertyEditor::updateModelDelay);
     connect(ui->actionsPlainTextEdit, &QPlainTextEdit::textChanged, this, &TransitionPropertyEditor::updateModelActions);
     connect(ui->conditionPlainTextEdit, &QPlainTextEdit::textChanged, this, &TransitionPropertyEditor::updateModelConditions);
+
+    ui->TransitionIdLineEdit->setValidator(new ModelIdValidator(ModelIdValidator::IdType::Transition, this));
 }
 
 TransitionPropertyEditor::~TransitionPropertyEditor() {
@@ -36,8 +39,8 @@ void TransitionPropertyEditor::syncPanelToSelected(EditorTransitionItem *selecte
     ui->conditionPlainTextEdit->setPlainText(QString::fromStdString(selected->getGuardCondition()));
 }
 
-void TransitionPropertyEditor::updateModelId(const QString& text) {
-    selected->setId(text.toStdString());
+void TransitionPropertyEditor::updateModelId() {
+    selected->setId(ui->TransitionIdLineEdit->text().toStdString());
 }
 
 void TransitionPropertyEditor::updateModelInputEvent(const QString& text) {

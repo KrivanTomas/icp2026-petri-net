@@ -52,7 +52,7 @@ void EditorTransitionItem::setId(std::string id) {
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
     if(net->getTransitions().find(model_id) != net->getTransitions().end()) {
         // change in model if exists
-        // TODO set id when that is possible
+        net->changeTransitionId(model_id, id);
     }
     model_id = id;
 }

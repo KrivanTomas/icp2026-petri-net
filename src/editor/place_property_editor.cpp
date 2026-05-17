@@ -9,6 +9,7 @@
 
 #include "../include/place_property_editor.h"
 #include "../ui/ui_place_property_editor.h"
+#include "../include/id_validator.h"
 
 PlacePropertyEditor::PlacePropertyEditor(QWidget *parent) :
     QWidget(parent),
@@ -16,9 +17,11 @@ PlacePropertyEditor::PlacePropertyEditor(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->placeIdLineEdit, &QLineEdit::textChanged, this, &PlacePropertyEditor::updateModelId);
+    connect(ui->placeIdLineEdit, &QLineEdit::editingFinished, this, &PlacePropertyEditor::updateModelId);
     connect(ui->tokenCountSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &PlacePropertyEditor::updateModelTokens);
     connect(ui->actionsText, &QPlainTextEdit::textChanged, this, &PlacePropertyEditor::updateModelActions);
+
+    ui->placeIdLineEdit->setValidator(new ModelIdValidator(ModelIdValidator::IdType::Place, this));
 }
 
 PlacePropertyEditor::~PlacePropertyEditor() {
@@ -32,8 +35,8 @@ void PlacePropertyEditor::syncPanelToSelected(EditorPlaceItem *selected) {
     ui->actionsText->setPlainText(QString::fromStdString(selected->getActions()));
 }
 
-void PlacePropertyEditor::updateModelId(const QString &text) {
-    selected->setId(text.toStdString());
+void PlacePropertyEditor::updateModelId() {
+    selected->setId(ui->placeIdLineEdit->text().toStdString());
 }
 
 void PlacePropertyEditor::updateModelTokens(int tokens) {

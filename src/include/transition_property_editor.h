@@ -30,7 +30,7 @@ public:
     void syncPanelToSelected(EditorTransitionItem *selected);
 
 public slots:
-    void updateModelId(const QString& text);
+    void updateModelId();
     void updateModelInputEvent(const QString& text);
     void updateModelDelay(std::int64_t delay);
     void updateModelActions();

@@ -65,6 +65,9 @@ add_library(editor OBJECT
     include/arc_property_editor.h
     ui/arc_property_editor.ui
 
+    editor/id_validator.cpp
+    include/id_validator.h
+
     editor/editor_net_model_sync.cpp
     include/editor_net_model_sync.h
 )

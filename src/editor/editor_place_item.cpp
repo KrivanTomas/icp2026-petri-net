@@ -13,6 +13,7 @@
 
 #include <QPen>
 #include <QGraphicsScene>
+#include <iostream>
 
 EditorPlaceItem::EditorPlaceItem() : QGraphicsEllipseItem(-50,-50,100,100) {
     setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -52,8 +53,8 @@ void EditorPlaceItem::setId(std::string id) {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
     if(net->getPlaces().find(model_id) != net->getPlaces().end()) {
-        // change in model if exists
-        // TODO set id when that is possible
+        // change model if exists
+        net->changePlaceId(model_id, id);
     }
     model_id = id;
 }

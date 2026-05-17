@@ -60,9 +60,11 @@ void EditorGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
                 EditorPlaceItem *item;
                 item = new EditorPlaceItem();
                 addItem(item);
-                std::string name = EditorNetModelSceneSync::generatePlaceName();
-                if(!EditorNetModelSceneSync::getCurrentNet()->addPlace(Place(name))) {
-                    throw std::runtime_error("Failed to insert a place into model");
+                std::string name; 
+                while(true) {
+                    name = EditorNetModelSceneSync::generatePlaceName();
+                    if(EditorNetModelSceneSync::getCurrentNet()->addPlace(Place(name)))
+                        break;
                 }
                 item->setId(name);
                 item->setPos(mouseEvent->scenePos());
@@ -72,9 +74,11 @@ void EditorGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
                 EditorTransitionItem *item;
                 item = new EditorTransitionItem();
                 addItem(item);
-                std::string name = EditorNetModelSceneSync::generateTransitionName();
-                if(!EditorNetModelSceneSync::getCurrentNet()->addTransition(Transition(name))) {
-                    throw std::runtime_error("Failed to insert a transition into model");
+                std::string name;
+                while(true) {
+                    name = EditorNetModelSceneSync::generateTransitionName();
+                    if(EditorNetModelSceneSync::getCurrentNet()->addTransition(Transition(name)))
+                        break;
                 }
                 item->setId(name);
                 item->setPos(mouseEvent->scenePos());
@@ -158,6 +162,20 @@ void EditorGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent
         else {
             editedArc->getPlace()->addArc(editedArc);
             editedArc->getTransition()->addArc(editedArc);
+            std::string name;
+            while(true) {
+                name = EditorNetModelSceneSync::generateTransitionName();
+                if(editedArc->getDirection() == EditorArcItem::TO_PLACE) {
+                    Arc arc_model(name, editedArc->getTransition()->getId(), editedArc->getPlace()->getId());
+                    if(EditorNetModelSceneSync::getCurrentNet()->addArc(arc_model))
+                        break;
+                }
+                else if(editedArc->getDirection() == EditorArcItem::TO_TRANSITION) {
+                    Arc arc_model(name, editedArc->getPlace()->getId(), editedArc->getTransition()->getId());
+                    if(EditorNetModelSceneSync::getCurrentNet()->addArc(arc_model))
+                        break;
+                }
+            }
             editedArc->model_id = EditorNetModelSceneSync::generateArcName();
         }
         editedArc = nullptr;

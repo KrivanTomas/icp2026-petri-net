@@ -31,7 +31,7 @@ public:
     void syncPanelToSelected(EditorPlaceItem *selected);
 
 public slots:
-    void updateModelId(const QString& text);
+    void updateModelId();
     void updateModelTokens(int tokens);
     void updateModelActions();
 
