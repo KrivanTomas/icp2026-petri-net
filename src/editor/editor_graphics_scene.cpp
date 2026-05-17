@@ -164,7 +164,7 @@ void EditorGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent
             editedArc->getTransition()->addArc(editedArc);
             std::string name;
             while(true) {
-                name = EditorNetModelSceneSync::generateTransitionName();
+                name = EditorNetModelSceneSync::generateArcName();
                 if(editedArc->getDirection() == EditorArcItem::TO_PLACE) {
                     Arc arc_model(name, editedArc->getTransition()->getId(), editedArc->getPlace()->getId());
                     if(EditorNetModelSceneSync::getCurrentNet()->addArc(arc_model))

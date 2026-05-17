@@ -9,6 +9,7 @@
 
 #include "../include/arc_property_editor.h"
 #include "../ui/ui_arc_property_editor.h"
+#include "../include/id_validator.h"
 
 ArcPropertyEditor::ArcPropertyEditor(QWidget *parent) :
     QWidget(parent),
@@ -18,6 +19,8 @@ ArcPropertyEditor::ArcPropertyEditor(QWidget *parent) :
 
     connect(ui->ArcIdLineEdit, &QLineEdit::editingFinished, this, &ArcPropertyEditor::updateModelId);
     connect(ui->weightSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &ArcPropertyEditor::updateModelWeight);
+
+    ui->ArcIdLineEdit->setValidator(new ModelIdValidator(ModelIdValidator::IdType::Arc, this));
 }
 
 ArcPropertyEditor::~ArcPropertyEditor() {
