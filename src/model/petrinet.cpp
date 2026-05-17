@@ -7,6 +7,7 @@
 
 
 #include "petrinet.h"
+#include <stdexcept>
 
 PetriNet::PetriNet(){
     time_at_start = getCurrentTime();
@@ -74,40 +75,77 @@ bool PetriNet::addArc(const Arc& arc) {
 }
 
 void PetriNet::changePlaceId(std::string old_id, std::string new_id) {
+    if(places.find(old_id) == places.end()) {
+        throw std::runtime_error("object_doesnt_exist");
+    }
+    if(new_id == old_id)
+    {
+        return;
+    }
     if(places.find(new_id) != places.end() ||
         transitions.find(new_id) != transitions.end() ||
         arcs.find(new_id) != arcs.end())
     {
         //place with this id already exists
-        throw("id_already_in_use");
+        throw std::runtime_error("id_already_in_use");
     }
     Place p = places.at(old_id);
     p.setId(new_id);
+    for(auto pair : arcs) {
+        if(pair.second.getSourceId() == old_id) {
+            pair.second.setSourceId(new_id);
+        }
+        if(pair.second.getTargetId() == old_id) {
+            pair.second.setTargetId(new_id);
+        }
+    }
     places.erase(old_id);
     addPlace(p);
 }
 
 void PetriNet::changeTransitionId(std::string old_id, std::string new_id) {
+    if(transitions.find(old_id) == transitions.end()) {
+        throw std::runtime_error("object_doesnt_exist");
+    }
+    if(new_id == old_id)
+    {
+        return;
+    }
     if(places.find(new_id) != places.end() ||
         transitions.find(new_id) != transitions.end() ||
         arcs.find(new_id) != arcs.end())
     {
         //place with this id already exists
-        throw("id_already_in_use");
+        throw std::runtime_error("id_already_in_use");
     }
     Transition t = transitions.at(old_id);
     t.setId(new_id);
+    for(auto pair : arcs) {
+        if(pair.second.getSourceId() == old_id) {
+            pair.second.setSourceId(new_id);
+        }
+        if(pair.second.getTargetId() == old_id) {
+            pair.second.setTargetId(new_id);
+        }
+    }
     transitions.erase(old_id);
     addTransition(t);
 }
 
 void PetriNet::changeArcId(std::string old_id, std::string new_id) {
+    if(arcs.find(old_id) == arcs.end()) {
+        throw std::runtime_error("object_doesnt_exist");
+    }
+    if(new_id == old_id)
+    {
+        return;
+    }
     if(places.find(new_id) != places.end() ||
         transitions.find(new_id) != transitions.end() ||
         arcs.find(new_id) != arcs.end())
     {
         //place with this id already exists
-        throw("id_already_in_use");
+        throw std::runtime_error("id_already_in_use");
     }
     Arc a = arcs.at(old_id);
     a.setId(new_id);
