@@ -34,14 +34,29 @@ public:
     std::string getId() const;
 
     /**
+     * @brief Changed the id (but not in petrinet!)
+     */
+    void setId(std::string new_id);
+
+    /**
      * @brief Gets the unique identifier of the source node.
      */
     std::string getSourceId() const;
 
     /**
+     * @brief Changed the source id (but not in petrinet!)
+     */
+    void setSourceId(std::string new_id);
+
+    /**
      * @brief Gets the unique identifier of the target node.
      */
     std::string getTargetId() const;
+
+    /**
+     * @brief Changed the target id (but not in petrinet!)
+     */
+    void setTargetId(std::string new_id);
 
     /**
      * @brief Gets the weight of the arc.

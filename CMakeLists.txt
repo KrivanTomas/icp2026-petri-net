@@ -24,3 +24,31 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 add_subdirectory(src)
+
+include(FetchContent)
+FetchContent_Declare(
+    nlohmann_json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+    DOWNLOAD_EXTRACT_TIMESTAMP ON
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
+# tests
+enable_testing()
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG v1.17.0    
+    DOWNLOAD_EXTRACT_TIMESTAMP ON
+)
+FetchContent_MakeAvailable(googletest)
+
+add_executable(run_tests tests/tests_model.cpp)
+
+target_link_libraries(run_tests PRIVATE net_model gtest_main)
+
+include(GoogleTest)
+
+gtest_discover_tests(run_tests)

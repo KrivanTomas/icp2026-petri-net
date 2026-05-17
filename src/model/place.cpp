@@ -14,6 +14,10 @@ std::string Place::getId() const {
     return id;
 }
 
+void Place::setId(std::string new_id) {
+    id = new_id;
+}
+
 int Place::getInitialTokens() const {
     return initial_tokens;
 }
