@@ -19,7 +19,7 @@ public:
 
     ModelIdValidator(IdType type, QObject *parent = nullptr);
     
-    State validate(QString &, int &) const override;
+    State validate(QString &input, int &pos) const override;
 private:
     IdType id_type;
 };

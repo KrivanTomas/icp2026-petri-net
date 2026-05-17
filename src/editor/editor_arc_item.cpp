@@ -8,6 +8,7 @@
  */
 
 #include "../include/editor_arc_item.h"
+#include "../include/editor_net_model_sync.h"
 
 #include <QPen>
 #include <QPainter>
@@ -175,3 +176,66 @@ void EditorArcItem::unsetTransition() {
     this->transition = nullptr;
 }
 
+void EditorArcItem::setId(std::string id) {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    if(net->getArcs().find(model_id) != net->getArcs().end()) {
+        // change model if exists
+        net->changeArcId(model_id, id);
+    }
+    model_id = id;
+}
+
+std::string EditorArcItem::getId() const {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    return model_id;
+}
+
+void EditorArcItem::setWeight(int weight) {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    if(net->getArcs().find(model_id) == net->getArcs().end())
+        throw std::runtime_error("EditorArcItem::setWeight(): Model desync");
+    net->getArcs().at(model_id).setWeight(weight);
+}
+
+int EditorArcItem::getWeight() const {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    if(net->getArcs().find(model_id) == net->getArcs().end())
+        throw std::runtime_error("EditorTransitionItem::setWeight(): Model desync");
+    return net->getArcs().at(model_id).getWeight();
+}
+
+void EditorArcItem::setTargetId(std::string id) {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    if(net->getArcs().find(model_id) == net->getArcs().end())
+        throw std::runtime_error("EditorArcItem::setTargetId(): Model desync");
+    net->getArcs().at(model_id).setTargetId(id);
+}
+
+std::string EditorArcItem::getTargetId() const {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    if(net->getArcs().find(model_id) == net->getArcs().end())
+        throw std::runtime_error("EditorTransitionItem::getTargetId(): Model desync");
+    return net->getArcs().at(model_id).getTargetId();
+}
+
+void EditorArcItem::setSourceId(std::string id) {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    if(net->getArcs().find(model_id) == net->getArcs().end())
+        throw std::runtime_error("EditorArcItem::setSourceId(): Model desync");
+    net->getArcs().at(model_id).setSourceId(id);
+}
+
+std::string EditorArcItem::getSourceId() const {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    if(net->getArcs().find(model_id) == net->getArcs().end())
+        throw std::runtime_error("EditorTransitionItem::getSourceId(): Model desync");
+    return net->getArcs().at(model_id).getSourceId();
+}

@@ -121,6 +121,7 @@ void MainWindow::setSelectedItem(QGraphicsItem *item) {
             selected_item_type = SelectedItemType::Arc;
             ui->propertiesDockContents->layout()->addWidget(arc_editor_ui);
             ui->propertiesDock->setWindowTitle("Arc Properties");
+            arc_editor_ui->syncPanelToSelected(arc);
             arc_editor_ui->setVisible(true);
             return;
         }

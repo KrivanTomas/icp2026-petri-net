@@ -15,8 +15,26 @@ ArcPropertyEditor::ArcPropertyEditor(QWidget *parent) :
     ui(new Ui::ArcPropertyEditor())
 {
     ui->setupUi(this);
+
+    connect(ui->ArcIdLineEdit, &QLineEdit::editingFinished, this, &ArcPropertyEditor::updateModelId);
+    connect(ui->weightSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &ArcPropertyEditor::updateModelWeight);
 }
 
 ArcPropertyEditor::~ArcPropertyEditor() {
     delete ui;
 }
+
+void ArcPropertyEditor::syncPanelToSelected(EditorArcItem *selected) {
+    this->selected = selected;
+    ui->ArcIdLineEdit->setText(QString::fromStdString(selected->getId()));
+    ui->weightSpinBox->setValue(selected->getWeight());
+}
+
+void ArcPropertyEditor::updateModelId() {
+    selected->setId(ui->ArcIdLineEdit->text().toStdString());
+}
+
+void ArcPropertyEditor::updateModelWeight(int weight) {
+    selected->setWeight(weight);
+}
+

@@ -38,9 +38,20 @@ public:
 
     bool isValid();
 
-    std::string model_id;
+    void setId(std::string id);
+    std::string getId() const;
+
+    void setWeight(int weight);
+    int getWeight() const;
+
+    void setSourceId(std::string actions);
+    std::string getSourceId() const;
+
+    void setTargetId(std::string actions);
+    std::string getTargetId() const;
 
 protected:
+    std::string model_id;
     Direction direction;
     EditorPlaceItem *place;
     QPointF tempDestination{};

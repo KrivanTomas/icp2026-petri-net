@@ -13,7 +13,6 @@
 
 #include <QPen>
 #include <QGraphicsScene>
-#include <iostream>
 
 EditorPlaceItem::EditorPlaceItem() : QGraphicsEllipseItem(-50,-50,100,100) {
     setFlag(QGraphicsItem::ItemIsMovable, true);

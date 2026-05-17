@@ -176,7 +176,7 @@ void EditorGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent
                         break;
                 }
             }
-            editedArc->model_id = EditorNetModelSceneSync::generateArcName();
+            editedArc->setId(name);
         }
         editedArc = nullptr;
     }

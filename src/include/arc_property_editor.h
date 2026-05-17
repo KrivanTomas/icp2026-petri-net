@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "editor_arc_item.h"
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -25,7 +26,13 @@ class ArcPropertyEditor : public QWidget
 public:
     ArcPropertyEditor(QWidget *parent = nullptr);
     ~ArcPropertyEditor();
+    void syncPanelToSelected(EditorArcItem *selected);
+
+public slots:
+    void updateModelId();
+    void updateModelWeight(int weight);
 
 private:
+    EditorArcItem *selected = nullptr;
     Ui::ArcPropertyEditor *ui;
 };
