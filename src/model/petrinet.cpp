@@ -252,14 +252,14 @@ bool PetriNet::isInputDefined(const std::string& input_name) const {
     return false;
 }
 
-const std::map<std::string, Place>& PetriNet::getPlaces() const {
+std::map<std::string, Place>& PetriNet::getPlaces() {
     return places;
 }
 
-const std::map<std::string, Transition>& PetriNet::getTransitions() const {
+std::map<std::string, Transition>& PetriNet::getTransitions() {
     return transitions;
 }
 
-const std::map<std::string, Arc>& PetriNet::getArcs() const {
+std::map<std::string, Arc>& PetriNet::getArcs() {
     return arcs;
 }

@@ -172,9 +172,9 @@ public:
     bool isInputDefined(const std::string& input_name) const;
 
     //getters
-    const std::map<std::string, Place>& getPlaces() const;
-    const std::map<std::string, Transition>& getTransitions() const;
-    const std::map<std::string, Arc>& getArcs() const;
+    std::map<std::string, Place>& getPlaces();
+    std::map<std::string, Transition>& getTransitions();
+    std::map<std::string, Arc>& getArcs();
 
 private:
     std::string net_name = "Unknown petrinet";
