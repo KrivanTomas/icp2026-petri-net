@@ -1,23 +1,20 @@
 /**
  * @file main.cpp
  *
- * @brief Starting point for the application
+ * @brief Entry point for the main GUI application
  *
  * @author
  *     Tomáš Křivan
  */
 
-
-#include <iostream>
-#include <QApplication>
-#include "include/module_test.h"
 #include "include/main_window.h"
 
-int main(int argc, char *argv[])
-{
-    std::cout << "Hello, World!\n";
-    module_test();
+#include <QApplication>
 
+/**
+ * @brief Entry point for the GUI editor application
+ */
+int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     MainWindow w;
     w.show();

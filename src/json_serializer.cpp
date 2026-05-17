@@ -1,5 +1,5 @@
 /**
- * @file file_management.cpp
+ * @file json_serializer.cpp
  *
  * @brief Implementation of json serialization.
  *
@@ -11,7 +11,6 @@
 #include "nlohmann/json.hpp"
 
 #include <fstream>
-#include <stdexcept>
 
 using json = nlohmann::json;
 

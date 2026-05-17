@@ -12,8 +12,8 @@ run: build
 	./build/main 
 
 doxygen:
-	echo todo
-
+	doxygen
+	
 pack:
 	echo todo
 

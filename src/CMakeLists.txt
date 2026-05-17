@@ -13,13 +13,6 @@ include_directories(./include)
 include_directories(./ui)
 
 
-
-add_library(module_test OBJECT
-    module_test.cpp 
-    include/module_test.h
-)
-
-
 # Petri net model
 add_library(net_model OBJECT
     model/petrinet.cpp 
@@ -90,9 +83,7 @@ add_executable(main
     main.cpp
 )
 target_link_libraries(main 
-    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets module_test main_window net_model editor
-)
-
+    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets main_window net_model editor
 
 # set main binary location to ./build/main instead of ./build/src/main
 set_target_properties(main 
