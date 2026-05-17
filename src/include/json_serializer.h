@@ -47,5 +47,5 @@ public:
      * @param error_msg Message on failure. 
      * @return True if save was succesful, or false if not.
      */
-    static bool saveFile(const std::string& file, const PetriNet& petri_net, const descriptor& net_descriptor, std::string& error_msg);
+    static bool saveFile(const std::string& file, PetriNet& petri_net, const descriptor& net_descriptor, std::string& error_msg);
 };
