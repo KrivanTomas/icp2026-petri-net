@@ -164,7 +164,7 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, desc
     return true;
 }
 
-bool JsonSerializer::saveFile(const std::string& file, const PetriNet& petri_net,const descriptor& net_descriptor, std::string& error_msg) {
+bool JsonSerializer::saveFile(const std::string& file, PetriNet& petri_net, const descriptor& net_descriptor, std::string& error_msg) {
     json jsn;
     //descriptor
     jsn["name"] = net_descriptor.name;
