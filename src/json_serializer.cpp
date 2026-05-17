@@ -155,7 +155,7 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, desc
             }
 
             Arc arc(id, source, target, weight);
-            if(!petri_net.addArcs(arc)) {
+            if(!petri_net.addArc(arc)) {
                 error_msg = "Duplicate or invalid arc - id: " + id + ", source: " + source + ", target: " + target;
                 return false;
             }

@@ -32,6 +32,11 @@ public:
     std::string getId() const;
 
     /**
+     * @brief Changed the id (but not in petrinet!)
+     */
+    void setId(std::string new_id);
+
+    /**
      * @brief Gets initial number of tokens.
      */
     int getInitialTokens() const;

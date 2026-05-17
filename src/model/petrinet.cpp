@@ -39,7 +39,7 @@ bool PetriNet::addTransition(const Transition& transition) {
     return true;
 }
 
-bool PetriNet::addArcs(const Arc& arc) {
+bool PetriNet::addArc(const Arc& arc) {
     std::string source_ID = arc.getSourceId();
     std::string target_ID = arc.getTargetId();
 
@@ -71,6 +71,60 @@ bool PetriNet::addArcs(const Arc& arc) {
 
     arcs.emplace(arc.getId(), arc);
     return true;
+}
+
+void PetriNet::changePlaceId(std::string old_id, std::string new_id) {
+    if(places.find(new_id) != places.end() ||
+        transitions.find(new_id) != transitions.end() ||
+        arcs.find(new_id) != arcs.end())
+    {
+        //place with this id already exists
+        throw("id_already_in_use");
+    }
+    Place p = places.at(old_id);
+    p.setId(new_id);
+    places.erase(old_id);
+    addPlace(p);
+}
+
+void PetriNet::changeTransitionId(std::string old_id, std::string new_id) {
+    if(places.find(new_id) != places.end() ||
+        transitions.find(new_id) != transitions.end() ||
+        arcs.find(new_id) != arcs.end())
+    {
+        //place with this id already exists
+        throw("id_already_in_use");
+    }
+    Transition t = transitions.at(old_id);
+    t.setId(new_id);
+    transitions.erase(old_id);
+    addTransition(t);
+}
+
+void PetriNet::changeArcId(std::string old_id, std::string new_id) {
+    if(places.find(new_id) != places.end() ||
+        transitions.find(new_id) != transitions.end() ||
+        arcs.find(new_id) != arcs.end())
+    {
+        //place with this id already exists
+        throw("id_already_in_use");
+    }
+    Arc a = arcs.at(old_id);
+    a.setId(new_id);
+    arcs.erase(old_id);
+    addArc(a);
+}
+
+void PetriNet::removePlace(std::string place_id) {
+    places.erase(place_id);
+}
+
+void PetriNet::removeTransition(std::string transition_id) {
+    transitions.erase(transition_id);
+}
+
+void PetriNet::removeArc(std::string arc_id) {
+    arcs.erase(arc_id);
 }
 
 std::string PetriNet::getName() const {
@@ -196,7 +250,6 @@ void PetriNet::reset() {
 }
 
 void PetriNet::clear() {
-    //reset place tokens
     places.clear();
     transitions.clear();
     arcs.clear();

@@ -15,12 +15,24 @@ std::string Arc::getId() const {
     return id;
 }
 
+void Arc::setId(std::string new_id) {
+    id = new_id;
+}
+
 std::string Arc::getSourceId() const {
     return source_id;
 }
 
+void Arc::setSourceId(std::string new_id) {
+    source_id = new_id;
+}
+
 std::string Arc::getTargetId() const {
     return target_id;
+}
+
+void Arc::setTargetId(std::string new_id) {
+    target_id = new_id;
 }
 
 int Arc::getWeight() const {
@@ -28,5 +40,5 @@ int Arc::getWeight() const {
 }
 
 void Arc::setWeight(int weight) {
-    weight = weight;
+    this->weight = weight;
 }
