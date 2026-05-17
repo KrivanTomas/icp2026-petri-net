@@ -8,40 +8,40 @@
 
 #include "place.h"
 
-Place::Place(const std::string& id, int initial_tokens) : m_id(id), m_initial_tokens(initial_tokens), m_current_tokens(initial_tokens) {}
+Place::Place(const std::string& id, int initial_tokens) : id(id), initial_tokens(initial_tokens), current_tokens(initial_tokens) {}
 
 std::string Place::getId() const {
-    return m_id;
+    return id;
 }
 
 int Place::getInitialTokens() const {
-    return m_initial_tokens;
+    return initial_tokens;
 }
 
 void Place::setInitialTokens(int count) {
-    m_initial_tokens = count;
+    initial_tokens = count;
 }
 
 int Place::getCurrentTokens() const {
-    return m_current_tokens;
+    return current_tokens;
 }
 
 void Place::setCurrentTokens(int count) {
-    m_current_tokens = count;
+    current_tokens = count;
 }
 
 std::string Place::getActionCode() const {
-    return m_action_code;
+    return action_code;
 }
 
 void Place::setActionCode(const std::string& code) {
-    m_action_code = code;
+    action_code = code;
 }
 
 int Place::getLastTimeChange() const {
-    return m_last_change_time_ms;
+    return last_change_time_ms;
 }
 
-void Place::setLastTimeChange(int time_ms) {
-    m_last_change_time_ms = time_ms;
+void Place::setLastTimeChange(int64_t time_ms) {
+    last_change_time_ms = time_ms;
 }

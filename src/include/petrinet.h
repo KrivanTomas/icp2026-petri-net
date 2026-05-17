@@ -14,14 +14,12 @@
 #include <string>
 #include <map>
 #include <set>
+#include <chrono>
 #include "place.h"
 #include "transition.h"
 #include "arc.h"
 
-struct PendingTimer {
-    std::string transition_id;
-    int64_t target_time_ms;
-};
+
 
 /**
  * @class PetriNet
@@ -30,6 +28,22 @@ struct PendingTimer {
 class PetriNet 
 {
 public:
+    /**
+     * @brief petrinet constructor and initializer
+     */
+    PetriNet();
+    /**
+     * @brief petrinet constructor and initializer
+     * @param pnet_name Name of the petrinet
+     */
+    PetriNet(std::string pnet_name);
+    /**
+     * @brief petrinet constructor and initializer
+     * @param pnet_name Name of the petrinet
+     * @param pnet_comment Comment of the petrinet
+     */
+    PetriNet(std::string pnet_name, std::string pnet_comment);
+
     /**
      * @brief Adds a place to the petri net.
      * @param plc The place to add.
@@ -123,35 +137,39 @@ public:
     void reset();
 
     /**
+     * @brief Clear the whole network
+     */
+    void clear();
+
+    /**
      * @brief Main simulation loop. Performs the maximum number of independent firings 
      * and stabilizes the network (microsteps). Handles only instantaneous transitions. 
      */
-    void runMicroSteps();
+    void fireScheduledTransitions();
 
     /**
-     * @brief Checks for timers to expire, and fires them if necessary.
-     * @param current_time_ms Current system time in milliseconds.
+     * @brief Updates internal time. (Milliseconds since launch).
      */
-    void updateTime(int64_t current_time_ms);
+    void updateTime();
 
     /**
      * @brief Returns current time of the petri net.
-     * @return Time in ms.
+     * @return Time in milliseconds.
      */
     int petriNetInternalTime() const;
+
+    /**
+     * @brief Returns current system time.
+     * @return Time in milliseconds.
+     */
+    int64_t getCurrentTime() const;
 
     /**
      * @brief Check if external input is defined.
      * @param input_name Validated input.
      * @return True if input is defined, or else false.
      */
-    bool isDefined(const std::string& input_name) const;
-
-    /**
-     * @brief Function triggers given event and evaluates the network.
-     * @param event Name of the event.
-     */
-    void triggerEvent(const std::string& event);
+    bool isInputDefined(const std::string& input_name) const;
 
     //getters
     const std::map<std::string, Place>& getPlaces() const;
@@ -159,19 +177,17 @@ public:
     const std::map<std::string, Arc>& getArcs() const;
 
 private:
-    std::string m_name;
-    std::string m_comment;
+    std::string net_name = "Unknown petrinet";
+    std::string net_comment = "";
 
-    std::map<std::string, std::string> m_inputs;
-    std::map<std::string, std::string> m_variables;
+    std::map<std::string, std::string> internal_inputs;
+    std::map<std::string, std::string> internal_variables;
 
-    std::string m_event;
-    std::set<std::string> m_defined_inputs;
+    std::map<std::string, Place> places;
+    std::map<std::string, Transition> transitions;
+    std::map<std::string, Arc> arcs;
 
-    std::map<std::string, Place> m_places;
-    std::map<std::string, Transition> m_transitions;
-    std::map<std::string, Arc> m_arcs;
-
-    int64_t m_current_time_ms = 0;
-    std::vector<PendingTimer> m_timers;
+    int64_t time_at_start = 0;
+    int64_t current_time_ms = 0;
+    std::map<std::string, int64_t> scheduled_timers;
 };

@@ -29,38 +29,12 @@ TEST(Structure, BipartiteGraph) {
 TEST(Data, InputsVariables) {
     PetriNet test_net;
 
-    EXPECT_FALSE(test_net.isDefined("condition"));
+    EXPECT_FALSE(test_net.isInputDefined("condition"));
 
     test_net.setInputValue("condition", "3524165");
     test_net.setVariable("timeout", "100");
 
-    EXPECT_TRUE(test_net.isDefined("condition"));
+    EXPECT_TRUE(test_net.isInputDefined("condition"));
     EXPECT_EQ(test_net.getInputValue("condition"), "3524165");
     EXPECT_EQ(test_net.getVariable("timeout"), "100");
-}
-
-TEST(Simulation, EventFiring) {
-    PetriNet test_net;
-    test_net.addPlace(Place("P1", 1));
-    test_net.addPlace(Place("P2"));
-
-    Transition trans("START");
-    trans.setInputEventName("button_click");
-    test_net.addTransition(trans);
-
-    test_net.addArcs(Arc("A1", "P1", "START"));
-    test_net.addArcs(Arc("A2", "START", "P2"));
-
-    test_net.runMicroSteps();
-
-    EXPECT_EQ(test_net.getPlaces().at("P1").getCurrentTokens(), 1);
-
-    test_net.triggerEvent("bksdbdsk");
-
-    EXPECT_EQ(test_net.getPlaces().at("P1").getCurrentTokens(), 1);
-
-    test_net.triggerEvent("button_click");
-
-    EXPECT_EQ(test_net.getPlaces().at("P1").getCurrentTokens(), 0);
-    EXPECT_EQ(test_net.getPlaces().at("P2").getCurrentTokens(), 1);
 }
