@@ -10,6 +10,7 @@
 
 #include "include/main_window.h"
 #include "ui/ui_main_window.h"
+#include "include/editor_net_model_sync.h"
 
 #include <QPushButton>
 #include <QMessageBox>
@@ -47,6 +48,13 @@ MainWindow::MainWindow(QWidget *parent) :
     place_editor_ui = new PlacePropertyEditor();
     transition_editor_ui = new TransitionPropertyEditor();
     arc_editor_ui = new ArcPropertyEditor();
+
+    net = new PetriNet();
+    EditorNetModelSceneSync::setCurrentNet(net);
+
+    net->addPlace(Place("Wawa"));
+
+    EditorNetModelSceneSync::syncSceneWithModel(scene);
 }
 
 MainWindow::~MainWindow()
@@ -56,6 +64,7 @@ MainWindow::~MainWindow()
     delete place_editor_ui;
     delete transition_editor_ui;
     delete arc_editor_ui;
+    delete net;
 }
 
 void MainWindow::onEditorModeChanged(EditorGraphicsScene::Mode mode) {
@@ -92,6 +101,7 @@ void MainWindow::setSelectedItem(QGraphicsItem *item) {
             selected_item_type = SelectedItemType::Place;
             ui->propertiesDockContents->layout()->addWidget(place_editor_ui);
             ui->propertiesDock->setWindowTitle("Place Properties");
+            place_editor_ui->syncPanelToSelected(place);
             place_editor_ui->setVisible(true);
             return;
         }
@@ -101,6 +111,7 @@ void MainWindow::setSelectedItem(QGraphicsItem *item) {
             selected_item_type = SelectedItemType::Transition;
             ui->propertiesDockContents->layout()->addWidget(transition_editor_ui);
             ui->propertiesDock->setWindowTitle("Transition Properties");
+            transition_editor_ui->syncPanelToSelected(transition);
             transition_editor_ui->setVisible(true);
             return;
         }

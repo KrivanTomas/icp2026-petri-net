@@ -30,7 +30,17 @@ public:
     enum { Type = UserType + 1 };
     int type() const override { return Type; }
     void removeArcs() override;
+    
+    void setId(std::string id);
+    std::string getId() const;
+
+    void setTokens(int tokens);
+    int getTokens() const;
+
+    void setActions(std::string actions);
+    std::string getActions() const;
 
 protected:
+    std::string model_id;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 };

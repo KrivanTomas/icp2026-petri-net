@@ -13,6 +13,7 @@
 #include "place_property_editor.h"
 #include "transition_property_editor.h"
 #include "arc_property_editor.h"
+#include "petrinet.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -38,8 +39,8 @@ public slots:
     void onEditorDeleteSelection();
 
 protected:
-    enum SelectedItemType { None, Place, Transition, Arc};
-    SelectedItemType selected_item_type = None;
+    enum class SelectedItemType { None, Place, Transition, Arc};
+    SelectedItemType selected_item_type = SelectedItemType::None;
     union {
         QGraphicsItem *item;  
         EditorPlaceItem *place_item;  
@@ -55,4 +56,5 @@ private:
     PlacePropertyEditor *place_editor_ui;
     TransitionPropertyEditor *transition_editor_ui;
     ArcPropertyEditor *arc_editor_ui;
+    PetriNet *net;
 };

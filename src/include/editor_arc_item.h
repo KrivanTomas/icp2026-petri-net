@@ -38,6 +38,8 @@ public:
 
     bool isValid();
 
+    std::string model_id;
+
 protected:
     Direction direction;
     EditorPlaceItem *place;

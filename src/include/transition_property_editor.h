@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "editor_transition_item.h" 
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -26,6 +27,16 @@ public:
     TransitionPropertyEditor(QWidget *parent = nullptr);
     ~TransitionPropertyEditor();
 
+    void syncPanelToSelected(EditorTransitionItem *selected);
+
+public slots:
+    void updateModelId(const QString& text);
+    void updateModelInputEvent(const QString& text);
+    void updateModelDelay(std::int64_t delay);
+    void updateModelActions();
+    void updateModelConditions();
+
 private:
+    EditorTransitionItem *selected = nullptr;
     Ui::TransitionPropertyEditor *ui;
 };

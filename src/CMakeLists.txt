@@ -64,6 +64,9 @@ add_library(editor OBJECT
     editor/arc_property_editor.cpp
     include/arc_property_editor.h
     ui/arc_property_editor.ui
+
+    editor/editor_net_model_sync.cpp
+    include/editor_net_model_sync.h
 )
 target_link_libraries(editor 
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets

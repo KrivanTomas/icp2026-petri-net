@@ -30,12 +30,12 @@ public:
     /**
      * @brief Sets the mode of operation within the edior.
      */
-    enum Mode { Insert, Edit };
+    enum class Mode { Insert, Edit };
 
     /**
      * @brief Sets the type of object to insert in insert mode.
      */
-    enum InsertObject { Place, Transition, Arc };
+    enum class InsertObject { Place, Transition, Arc };
 
 public slots:
     /**

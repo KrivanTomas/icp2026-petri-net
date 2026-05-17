@@ -10,6 +10,7 @@
 #include "../include/editor_graphics_scene.h"
 #include "../include/editor_place_item.h"
 #include "../include/editor_transition_item.h"
+#include "../include/editor_net_model_sync.h"
 
 #include <QGraphicsSceneMouseEvent>
 
@@ -58,16 +59,24 @@ void EditorGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
             case InsertObject::Place: {
                 EditorPlaceItem *item;
                 item = new EditorPlaceItem();
-                item->setBrush(QBrush(QColor(255,255,255), Qt::SolidPattern));
                 addItem(item);
+                std::string name = EditorNetModelSceneSync::generatePlaceName();
+                if(!EditorNetModelSceneSync::getCurrentNet()->addPlace(Place(name))) {
+                    throw std::runtime_error("Failed to insert a place into model");
+                }
+                item->setId(name);
                 item->setPos(mouseEvent->scenePos());
                 break;
                                       }
             case InsertObject::Transition: {
                 EditorTransitionItem *item;
                 item = new EditorTransitionItem();
-                item->setBrush(QBrush(QColor(255,255,255), Qt::SolidPattern));
                 addItem(item);
+                std::string name = EditorNetModelSceneSync::generateTransitionName();
+                if(!EditorNetModelSceneSync::getCurrentNet()->addTransition(Transition(name))) {
+                    throw std::runtime_error("Failed to insert a transition into model");
+                }
+                item->setId(name);
                 item->setPos(mouseEvent->scenePos());
                 break;
                                            }
@@ -142,7 +151,6 @@ void EditorGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 
 void EditorGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     if(editedArc != nullptr) {
-        // TODO place arc if valid
         if(!editedArc->isValid()) {
             removeItem(editedArc);
             delete editedArc;
@@ -150,6 +158,7 @@ void EditorGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent
         else {
             editedArc->getPlace()->addArc(editedArc);
             editedArc->getTransition()->addArc(editedArc);
+            editedArc->model_id = EditorNetModelSceneSync::generateArcName();
         }
         editedArc = nullptr;
     }

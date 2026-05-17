@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "editor_place_item.h"
+
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -26,6 +28,14 @@ public:
     PlacePropertyEditor(QWidget *parent = nullptr);
     ~PlacePropertyEditor();
 
+    void syncPanelToSelected(EditorPlaceItem *selected);
+
+public slots:
+    void updateModelId(const QString& text);
+    void updateModelTokens(int tokens);
+    void updateModelActions();
+
 private:
+    EditorPlaceItem *selected = nullptr;
     Ui::PlacePropertyEditor *ui;
 };
