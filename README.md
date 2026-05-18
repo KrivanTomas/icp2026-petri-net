@@ -30,6 +30,7 @@ The user has the ability to load or save nets to files, as well as edit and modi
     - Inscryption language support (actions and guard conditions)
 
 ## SIMULATION TESTING
+First argument is a path to petri net file.
 Simulation was unfortunately not connected to the GUI window. However, it supports very rough tcp communication.
 If you run ./simulation; it will begin simulating scheduled transmitions and start looking for an open client at port 20003 to receive data from. 
 You can connect through another terminal by using the command "telnet localhost 20003".
