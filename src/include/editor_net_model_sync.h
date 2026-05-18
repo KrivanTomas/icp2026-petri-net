@@ -20,6 +20,7 @@ public:
     static std::string generateArcName();
     static PetriNet *getCurrentNet();
     static void setCurrentNet(PetriNet *net);
+    static void resetCounters();
 private:
     static PetriNet *net;
     static unsigned int place_counter;

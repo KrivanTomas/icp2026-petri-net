@@ -16,8 +16,8 @@
 
 class EditorArcItem : public QGraphicsLineItem {
 public:
-    EditorArcItem(EditorPlaceItem *from, EditorTransitionItem *to, QGraphicsItem *parent);
-    EditorArcItem(EditorTransitionItem *from, EditorPlaceItem *to, QGraphicsItem *parent);
+    EditorArcItem(EditorPlaceItem *from, EditorTransitionItem *to, QGraphicsItem *parent = nullptr);
+    EditorArcItem(EditorTransitionItem *from, EditorPlaceItem *to, QGraphicsItem *parent = nullptr);
 
     QRectF boundingRect() const override;
     QPainterPath shape() const override;

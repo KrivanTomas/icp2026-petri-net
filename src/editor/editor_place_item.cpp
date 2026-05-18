@@ -32,8 +32,8 @@ void EditorPlaceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) return; 
     if(net->getPlaces().find(model_id) != net->getPlaces().end()) {
-        int tokens = net->getPlaces().at(model_id).getCurrentTokens();
-        std::string id = net->getPlaces().at(model_id).getId();
+        int tokens = getTokens();
+        std::string id = getId();
 
         // draw id
         painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -141,7 +141,7 @@ void EditorPlaceItem::setTokens(int tokens) {
     if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
     if(net->getPlaces().find(model_id) == net->getPlaces().end())
         throw std::runtime_error("EditorPlaceItem::setTokens(): Model desync");
-    net->getPlaces().at(model_id).setCurrentTokens(tokens);
+    net->getPlaces().at(model_id).setInitialTokens(tokens);
     update();
 }
 
@@ -151,7 +151,7 @@ int EditorPlaceItem::getTokens() const {
     if(net->getPlaces().find(model_id) == net->getPlaces().end())
         throw std::runtime_error("EditorPlaceItem::getTokens(): Model desync");
 
-    return net->getPlaces().at(model_id).getCurrentTokens();
+    return net->getPlaces().at(model_id).getInitialTokens();
 }
 
 void EditorPlaceItem::setActions(std::string actions) {

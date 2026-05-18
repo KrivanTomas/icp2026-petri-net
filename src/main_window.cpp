@@ -11,11 +11,14 @@
 #include "include/main_window.h"
 #include "ui/ui_main_window.h"
 #include "include/editor_net_model_sync.h"
+#include "include/json_serializer.h"
 
 #include <QPushButton>
 #include <QMessageBox>
 #include <QSignalMapper>
 #include <QBrush>
+#include <QFileDialog>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,6 +43,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(scene, &EditorGraphicsScene::modeChanged, this, &MainWindow::onEditorModeChanged);
     connect(scene, &EditorGraphicsScene::selectionChanged, this, &MainWindow::onEditorSelectionChanged);
 
+    // Files
+    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newFile);
+    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openFile);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveFile);
+
     // Property ui
     place_editor_ui = new PlacePropertyEditor();
     transition_editor_ui = new TransitionPropertyEditor();
@@ -56,8 +64,6 @@ MainWindow::MainWindow(QWidget *parent) :
     net = new PetriNet();
     EditorNetModelSceneSync::setCurrentNet(net);
 
-    // TODO load files
-
     EditorNetModelSceneSync::syncSceneWithModel(scene);
 }
 
@@ -69,6 +75,52 @@ MainWindow::~MainWindow()
     delete transition_editor_ui;
     delete arc_editor_ui;
     delete net;
+}  
+
+void MainWindow::newFile() {
+    // TODO if not saved
+    scene->clear();
+    net->clear();
+    EditorNetModelSceneSync::syncSceneWithModel(scene);
+    EditorNetModelSceneSync::resetCounters();
+}
+
+void MainWindow::openFile() {
+    QFileDialog dialog(this, tr("Open a petri net project"), "", "PetriNet file (*.json)");
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    if(dialog.exec()) {
+        QString file = dialog.selectedFiles().first();
+
+        std::string msg;
+        descriptor descr;
+
+        PetriNet *new_net = new PetriNet;
+        if(!JsonSerializer::loadFile(file.toStdString(), *new_net, descr, msg)) {
+            std::cerr << msg << std::endl;
+            return;
+        }
+
+        scene->clear();
+        delete net;
+        net = new_net;
+        EditorNetModelSceneSync::setCurrentNet(net);
+        EditorNetModelSceneSync::resetCounters();
+        EditorNetModelSceneSync::syncSceneWithModel(scene);
+    }
+}
+
+void MainWindow::saveFile() {
+    QFileDialog dialog(this, tr("Save a petri net project"), "", "PetriNet file (*.json)");
+    dialog.setFileMode(QFileDialog::AnyFile);
+    if(dialog.exec()) {
+        std::string msg;
+        descriptor descr;
+        QString file = dialog.selectedFiles().first();
+        if(!JsonSerializer::saveFile(file.toStdString(), *net, descr, msg)) {
+            std::cerr << msg << std::endl;
+            return;
+        }
+    }
 }
 
 void MainWindow::onEditorModeChanged(EditorGraphicsScene::Mode mode) {

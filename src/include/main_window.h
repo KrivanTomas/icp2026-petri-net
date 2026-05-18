@@ -37,6 +37,9 @@ public slots:
     void onEditorModeChanged(EditorGraphicsScene::Mode mode);
     void onEditorSelectionChanged();
     void onEditorDeleteSelection();
+    void newFile();
+    void openFile();
+    void saveFile();
 
 protected:
     enum class SelectedItemType { None, Place, Transition, Arc};
