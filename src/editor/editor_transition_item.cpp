@@ -20,7 +20,7 @@ EditorTransitionItem::EditorTransitionItem() : QGraphicsRectItem(-25,-50,50,100)
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
     setBrush(QBrush(QColor(255,255,255), Qt::SolidPattern));
-    setPen(QPen(Qt::gray, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 }
 
 QVariant EditorTransitionItem::itemChange(GraphicsItemChange change, const QVariant &value)

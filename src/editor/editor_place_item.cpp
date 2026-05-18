@@ -13,6 +13,7 @@
 
 #include <QPen>
 #include <QGraphicsScene>
+#include <QPainter>
 
 EditorPlaceItem::EditorPlaceItem() : QGraphicsEllipseItem(-50,-50,100,100) {
     setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -20,9 +21,66 @@ EditorPlaceItem::EditorPlaceItem() : QGraphicsEllipseItem(-50,-50,100,100) {
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
     radius = 100 / 2.0;
-
+    setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     setBrush(QBrush(QColor(255,255,255), Qt::SolidPattern));
-    setPen(QPen(Qt::gray, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+}
+    
+void EditorPlaceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    this->QGraphicsEllipseItem::paint(painter, option, widget);
+
+
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) return; 
+    if(net->getPlaces().find(model_id) != net->getPlaces().end()) {
+        int tokens = net->getPlaces().at(model_id).getCurrentTokens();
+
+        // prepare painter
+        painter->setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter->setBrush(QBrush(Qt::black, Qt::SolidPattern));
+        QFont font = painter->font();
+        font.setPixelSize(24);
+        painter->setFont(font);
+
+        int token_size = 18;
+        int spacing = 22;
+        if(tokens <= 0) return;
+        else if(tokens == 1) {
+            painter->drawEllipse(-token_size / 2.0, -token_size / 2.0, token_size, token_size);
+        }
+        else if(tokens == 2) {
+            painter->drawEllipse(-token_size / 2.0 - spacing, -token_size / 2.0, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 + spacing, -token_size / 2.0, token_size, token_size);
+        }
+        else if(tokens == 3) {
+            painter->drawEllipse(-token_size / 2.0, -token_size / 2.0 - spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 - spacing, -token_size / 2.0 + spacing * 0.66, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 + spacing, -token_size / 2.0 + spacing * 0.66, token_size, token_size);
+        }
+        else if(tokens == 4) {
+            painter->drawEllipse(-token_size / 2.0 - spacing, -token_size / 2.0 - spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 - spacing, -token_size / 2.0 + spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 + spacing, -token_size / 2.0 - spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 + spacing, -token_size / 2.0 + spacing, token_size, token_size);
+        }
+        else if(tokens == 5) {
+            painter->drawEllipse(-token_size / 2.0 - spacing, -token_size / 2.0 - spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 - spacing, -token_size / 2.0 + spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 + spacing, -token_size / 2.0 - spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 + spacing, -token_size / 2.0 + spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0, -token_size / 2.0, token_size, token_size);
+        }
+        else if(tokens == 6) {
+            painter->drawEllipse(-token_size / 2.0 - spacing, -token_size / 2.0, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 + spacing, -token_size / 2.0, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 - spacing, -token_size / 2.0 - spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 - spacing, -token_size / 2.0 + spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 + spacing, -token_size / 2.0 - spacing, token_size, token_size);
+            painter->drawEllipse(-token_size / 2.0 + spacing, -token_size / 2.0 + spacing, token_size, token_size);
+        }
+        else {
+            painter->drawText(rect(), Qt::AlignCenter, QString::fromStdString(std::to_string(tokens)));
+        }
+    }
 }
 
 QVariant EditorPlaceItem::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -56,6 +114,7 @@ void EditorPlaceItem::setId(std::string id) {
         net->changePlaceId(model_id, id);
     }
     model_id = id;
+    update();
 }
 
 std::string EditorPlaceItem::getId() const {
@@ -70,6 +129,7 @@ void EditorPlaceItem::setTokens(int tokens) {
     if(net->getPlaces().find(model_id) == net->getPlaces().end())
         throw std::runtime_error("EditorPlaceItem::setTokens(): Model desync");
     net->getPlaces().at(model_id).setCurrentTokens(tokens);
+    update();
 }
 
 int EditorPlaceItem::getTokens() const {
