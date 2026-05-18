@@ -56,6 +56,6 @@ void Arc::setPosY(float y) {
     gui_position.second = y;
 }
 
-std::pair<float, float> Arc::getPosition() {
+std::pair<float, float> Arc::getPosition() const {
     return gui_position;
 }

@@ -71,6 +71,6 @@ void Transition::setPosY(float y) {
     gui_position.second = y;
 }
 
-std::pair<float, float> Transition::getPosition() {
+std::pair<float, float> Transition::getPosition() const {
     return gui_position;
 }

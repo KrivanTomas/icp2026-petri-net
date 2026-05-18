@@ -63,6 +63,6 @@ void Place::setPosY(float y) {
     gui_position.second = y;
 }
 
-std::pair<float, float> Place::getPosition() {
+std::pair<float, float> Place::getPosition() const {
     return gui_position;
 }

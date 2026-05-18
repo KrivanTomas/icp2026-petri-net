@@ -36,6 +36,16 @@ static int jsonToInteger(const json& object, const std::string& key, int fallbac
     return fallback;
 }
 
+/**
+ * @brief Function reads a JSON float field with default fallback.
+ */
+static int jsonToFloat(const json& object, const std::string& key, int fallback = 0) {
+    if(object.contains(key) && object[key].is_number_float()) {
+        return object[key].get<float>();
+    }
+    return fallback;
+}
+
 bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std::string& error_msg) {
     std::ifstream input_file(file);
     if(!input_file.is_open()) {
@@ -93,6 +103,8 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std:
             std::string id = jsonToString(place_jsn, "id");
             int init_tokens = jsonToInteger(place_jsn, "initial_tokens", 0);
             std::string action_code = jsonToString(place_jsn, "action_code");
+            float pos_x = jsonToFloat(place_jsn, "position_x");
+            float pos_y = jsonToFloat(place_jsn, "position_y");
 
             if(id.empty()) {
                 error_msg = "Place entry is missing id.";
@@ -101,6 +113,7 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std:
 
             Place place(id, init_tokens);
             place.setActionCode(action_code);
+            place.setPosition(pos_x, pos_y);
 
             if(!petri_net.addPlace(place)) {
                 error_msg = "Duplicite id of places: " + id;
@@ -127,6 +140,8 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std:
                 }
             }
             std::string action_code = jsonToString(trans_jsn, "action_code");
+            float pos_x = jsonToFloat(trans_jsn, "position_x");
+            float pos_y = jsonToFloat(trans_jsn, "position_y");
 
             if(id.empty()) {
                 error_msg = "Transition is missing an id.";
@@ -138,6 +153,7 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std:
             trans.setGuardCondition(guard);
             trans.setDelay(delay_ms);
             trans.setActionCode(action_code);
+            trans.setPosition(pos_x, pos_y);
 
             if(!petri_net.addTransition(trans)) {
                 error_msg = "Duplicate transition id: " + id;
@@ -154,6 +170,8 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std:
             std::string source = jsonToString(arc_jsn, "source");
             std::string target = jsonToString(arc_jsn, "target");
             int weight = jsonToInteger(arc_jsn, "weight", 1);
+            float pos_x = jsonToFloat(arc_jsn, "position_x");
+            float pos_y = jsonToFloat(arc_jsn, "position_y");
 
             if(id.empty() || source.empty() || target.empty()) {
                 error_msg = "Arc is missing 'id', 'source' or 'target'.";
@@ -161,6 +179,8 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std:
             }
 
             Arc arc(id, source, target, weight);
+            arc.setPosition(pos_x, pos_y);
+            
             if(!petri_net.addArc(arc)) {
                 error_msg = "Duplicate or invalid arc - id: " + id + ", source: " + source + ", target: " + target;
                 return false;
@@ -185,7 +205,9 @@ bool JsonSerializer::saveFile(const std::string& file, PetriNet& petri_net, std:
         jsn["places"].push_back({
             {"id", place.getId() },
             {"initial_tokens", place.getInitialTokens()},
-            {"action_code", place.getActionCode()}
+            {"action_code", place.getActionCode()},
+            {"position_x", place.getPosition().first},
+            {"position_y", place.getPosition().second}
         });
     }
 
@@ -197,7 +219,9 @@ bool JsonSerializer::saveFile(const std::string& file, PetriNet& petri_net, std:
             {"input_event", trans.getInputEventName()},
             {"guard", trans.getGuardCondition()},
             {"delay_ms", trans.getDelay()},
-            {"action_code", trans.getActionCode()}
+            {"action_code", trans.getActionCode()},
+            {"position_x", trans.getPosition().first},
+            {"position_y", trans.getPosition().second}
         });
     }
 
@@ -208,7 +232,9 @@ bool JsonSerializer::saveFile(const std::string& file, PetriNet& petri_net, std:
             {"id", arc.getId() },
             {"source", arc.getSourceId()},
             {"target", arc.getTargetId()},
-            {"weight", arc.getWeight()}
+            {"weight", arc.getWeight()},
+            {"position_x", arc.getPosition().first},
+            {"position_y", arc.getPosition().second}
         });
     }
 

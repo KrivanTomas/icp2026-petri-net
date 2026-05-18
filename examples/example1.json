@@ -2,36 +2,48 @@
     "arcs": [
         {
             "id": "1a",
+            "position_x": 0.0,
+            "position_y": 0.0,
             "source": "1p",
             "target": "1t",
             "weight": 2
         },
         {
             "id": "2a",
+            "position_x": 0.0,
+            "position_y": 0.0,
             "source": "1t",
             "target": "2p",
             "weight": 5
         },
         {
             "id": "3a",
+            "position_x": 0.0,
+            "position_y": 0.0,
             "source": "1t",
             "target": "3p",
             "weight": 1
         },
         {
             "id": "4a",
+            "position_x": 0.0,
+            "position_y": 0.0,
             "source": "3p",
             "target": "2t",
             "weight": 2
         },
         {
             "id": "5a",
+            "position_x": 0.0,
+            "position_y": 0.0,
             "source": "2t",
             "target": "4p",
             "weight": 2
         },
         {
             "id": "6a",
+            "position_x": 0.0,
+            "position_y": 0.0,
             "source": "4p",
             "target": "1t",
             "weight": 2
@@ -45,22 +57,30 @@
         {
             "action_code": "",
             "id": "1p",
-            "initial_tokens": 50
+            "initial_tokens": 50,
+            "position_x": 0.5550000071525574,
+            "position_y": 1.100000023841858
         },
         {
             "action_code": "",
             "id": "2p",
-            "initial_tokens": 4
+            "initial_tokens": 4,
+            "position_x": 0.0,
+            "position_y": 0.0
         },
         {
             "action_code": "",
             "id": "3p",
-            "initial_tokens": 7
+            "initial_tokens": 7,
+            "position_x": 0.0,
+            "position_y": 0.0
         },
         {
             "action_code": "",
             "id": "4p",
-            "initial_tokens": 1
+            "initial_tokens": 1,
+            "position_x": 0.0,
+            "position_y": 0.0
         }
     ],
     "transitions": [
@@ -69,21 +89,27 @@
             "delay_ms": 50,
             "guard": "",
             "id": "1t",
-            "input_event": ""
+            "input_event": "",
+            "position_x": 0.0,
+            "position_y": 0.0
         },
         {
             "action_code": "",
-            "delay_ms": "timeout",
+            "delay_ms": 1000,
             "guard": "",
             "id": "2t",
-            "input_event": ""
+            "input_event": "",
+            "position_x": 0.0,
+            "position_y": 0.0
         },
         {
             "action_code": "",
             "delay_ms": 10,
             "guard": "",
             "id": "3t",
-            "input_event": ""
+            "input_event": "",
+            "position_x": 0.0,
+            "position_y": 0.0
         }
     ],
     "variables": {

@@ -103,7 +103,7 @@ public:
      * @brief Get the 2D position
      * @return Pair containing x and y coordinates.
      */
-    std::pair<float, float> getPosition();
+    std::pair<float, float> getPosition() const;
 
 private:
     std::string id;
