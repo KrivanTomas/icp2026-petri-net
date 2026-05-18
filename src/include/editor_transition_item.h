@@ -149,6 +149,26 @@ public:
      */
     std::int64_t getDelay() const;
 
+    /**
+     * @brief Set the position for the underlying Transition in the PetriNet model
+     *
+     * @throws std::runtime_error if the object isn't connected to a PetriNet  
+     * @throws std::runtime_error if the an object with the set id does not exist  
+     *
+     * @param pos
+     */
+    void setPosition(QPointF pos);
+
+    /**
+     * @brief Get the current position from the underlying Transition in the PetriNet model
+     *
+     * @throws std::runtime_error if the object isn't connected to a PetriNet  
+     * @throws std::runtime_error if the an object with the set id does not exist  
+     *
+     * @return position
+     */
+    QPointF getPosition() const;
+
 protected:
     std::string model_id;
 

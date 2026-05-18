@@ -170,8 +170,6 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std:
             std::string source = jsonToString(arc_jsn, "source");
             std::string target = jsonToString(arc_jsn, "target");
             int weight = jsonToInteger(arc_jsn, "weight", 1);
-            float pos_x = jsonToFloat(arc_jsn, "position_x");
-            float pos_y = jsonToFloat(arc_jsn, "position_y");
 
             if(id.empty() || source.empty() || target.empty()) {
                 error_msg = "Arc is missing 'id', 'source' or 'target'.";
@@ -179,7 +177,6 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std:
             }
 
             Arc arc(id, source, target, weight);
-            arc.setPosition(pos_x, pos_y);
             
             if(!petri_net.addArc(arc)) {
                 error_msg = "Duplicate or invalid arc - id: " + id + ", source: " + source + ", target: " + target;
@@ -233,8 +230,6 @@ bool JsonSerializer::saveFile(const std::string& file, PetriNet& petri_net, std:
             {"source", arc.getSourceId()},
             {"target", arc.getTargetId()},
             {"weight", arc.getWeight()},
-            {"position_x", arc.getPosition().first},
-            {"position_y", arc.getPosition().second}
         });
     }
 

@@ -66,6 +66,7 @@ void EditorGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
                         break;
                 }
                 item->setId(name);
+                item->setPos(item->getPosition());
                 item->setPos(mouseEvent->scenePos());
                 break;
                                       }
@@ -80,6 +81,7 @@ void EditorGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
                         break;
                 }
                 item->setId(name);
+                item->setPos(item->getPosition());
                 item->setPos(mouseEvent->scenePos());
                 break;
                                            }

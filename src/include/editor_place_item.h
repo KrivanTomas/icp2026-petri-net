@@ -66,7 +66,7 @@ public:
      *
      * @throws std::runtime_error if the object isn't connected to a PetriNet  
      *
-     * @returns id
+     * @return id
      */
     std::string getId() const;
 
@@ -86,7 +86,7 @@ public:
      * @throws std::runtime_error if the object isn't connected to a PetriNet  
      * @throws std::runtime_error if the an object with the set id does not exist  
      *
-     * @returns tokens
+     * @return tokens
      */
     int getTokens() const;
 
@@ -106,9 +106,29 @@ public:
      * @throws std::runtime_error if the object isn't connected to a PetriNet  
      * @throws std::runtime_error if the an object with the set id does not exist  
      *
-     * @returns actions
+     * @return actions
      */
     std::string getActions() const;
+
+    /**
+     * @brief Set the position for the underlying Place in the PetriNet model
+     *
+     * @throws std::runtime_error if the object isn't connected to a PetriNet  
+     * @throws std::runtime_error if the an object with the set id does not exist  
+     *
+     * @param pos
+     */
+    void setPosition(QPointF pos);
+
+    /**
+     * @brief Get the current position from the underlying Place in the PetriNet model
+     *
+     * @throws std::runtime_error if the object isn't connected to a PetriNet  
+     * @throws std::runtime_error if the an object with the set id does not exist  
+     *
+     * @return position
+     */
+    QPointF getPosition() const;
 
 protected:
     std::string model_id;
