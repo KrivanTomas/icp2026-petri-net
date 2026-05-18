@@ -166,6 +166,7 @@ void MainWindow::onEditorDeleteSelection() {
                 arc->getPlace()->removeArc(arc);
             if(arc->getTransition() != nullptr)
                 arc->getTransition()->removeArc(arc);
+            net->removeArc(arc->getId());
             scene->removeItem(item);
             delete item;
         }
@@ -175,11 +176,19 @@ void MainWindow::onEditorDeleteSelection() {
     for(QGraphicsItem *item : selected) {
         EditorPlaceItem *place = qgraphicsitem_cast<EditorPlaceItem*>(item);
         if(place != nullptr) {
+            for(auto arc : place->getArcs()) {
+                net->removeArc(arc->getId());
+            }
             place->removeArcs();
+            net->removePlace(place->getId());
         }
         EditorTransitionItem *transition = qgraphicsitem_cast<EditorTransitionItem*>(item);
         if(transition != nullptr) {
+            for(auto arc : transition->getArcs()) {
+                net->removeArc(arc->getId());
+            }
             transition->removeArcs();
+            net->removeTransition(transition->getId());
         }
         scene->removeItem(item);
         delete item;

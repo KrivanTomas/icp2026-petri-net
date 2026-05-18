@@ -16,3 +16,8 @@ void EditorNode::addArc(EditorArcItem *arc) {
 void EditorNode::removeArc(EditorArcItem *arc) {
     arcs.removeAll(arc);
 }
+
+QList<EditorArcItem*>& EditorNode::getArcs() {
+    return arcs;
+}
+

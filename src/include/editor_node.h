@@ -17,6 +17,7 @@ class EditorNode {
 public:
     void addArc(EditorArcItem *arc);
     void removeArc(EditorArcItem *arc);
+    QList<EditorArcItem*>& getArcs();
     virtual void removeArcs() = 0;
 
 protected:

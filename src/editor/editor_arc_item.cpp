@@ -17,7 +17,7 @@
 EditorArcItem::EditorArcItem(EditorPlaceItem *from, EditorTransitionItem *to, QGraphicsItem *parent) :
         QGraphicsLineItem(parent), place(from), transition(to) {
     setFlag(QGraphicsItem::ItemIsSelectable, true);
-    setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setPen(QPen(Qt::black, 4, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
     setZValue(-1000);
 
     direction = Direction::TO_TRANSITION;
