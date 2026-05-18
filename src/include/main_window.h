@@ -121,4 +121,6 @@ private:
     TransitionPropertyEditor *transition_editor_ui;
     ArcPropertyEditor *arc_editor_ui;
     PetriNet *net;
+    std::string edited_file_path;
+    bool file_dirty = false;
 };
