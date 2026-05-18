@@ -13,6 +13,7 @@
 #include "../include/petrinet.h"
 #include "../include/event.h"
 #include "../include/sim_util.h"
+#include "../include/json_serializer.h"
 
 PetriNet p_net;
 Sender* event_sender = new Sender();
@@ -42,8 +43,16 @@ public:
     
 };
 
-int main()
+/**
+ * @brief Entry point of simulation
+ */
+int main(int argc, char** argv)
 {
+    std::string json_file_name = "../examples/example1.json";
+    if(argc >= 2){
+        json_file_name = argv[1];
+    }
+
     std::cout << "Hello from simulation!\n";
 
     SimUtil::setEventSender(event_sender);
@@ -51,24 +60,30 @@ int main()
     
     EventTester* et = new EventTester();
     event_sender->addObserver(et);
+    descriptor pnet_desc = descriptor();
+    std::string read_failure = "JSON was read correctly";
+    if(!JsonSerializer::loadFile(json_file_name, p_net, pnet_desc, read_failure)){
+        std::cout << read_failure << "\n";
 
-    p_net = PetriNet();
-
-    p_net.addPlace(Place("1p", 50));
-    p_net.addPlace(Place("2p", 4));
-    p_net.addPlace(Place("3p", 7));
-    p_net.addPlace(Place("4p", 1));
-    p_net.addTransition(Transition("1t"));
-    p_net.addTransition(Transition("2t"));
-    p_net.addTransition(Transition("3t"));
-    p_net.addArc(Arc("1a", "1p", "1t", 2));
-    p_net.addArc(Arc("2a", "1t", "2p", 5));
-    p_net.addArc(Arc("3a", "1t", "3p", 1));
-
-    p_net.addArc(Arc("4a", "3p", "2t", 2));
-    p_net.addArc(Arc("5a", "2t", "4p", 2));
-
-    p_net.addArc(Arc("6a", "4p", "1t", 2));
+        // failed to read from json, generate example net        
+        p_net = PetriNet();
+        
+        p_net.addPlace(Place("1p", 50));
+        p_net.addPlace(Place("2p", 4));
+        p_net.addPlace(Place("3p", 7));
+        p_net.addPlace(Place("4p", 1));
+        p_net.addTransition(Transition("1t"));
+        p_net.addTransition(Transition("2t"));
+        p_net.addTransition(Transition("3t"));
+        p_net.addArc(Arc("1a", "1p", "1t", 2));
+        p_net.addArc(Arc("2a", "1t", "2p", 5));
+        p_net.addArc(Arc("3a", "1t", "3p", 1));
+        
+        p_net.addArc(Arc("4a", "3p", "2t", 2));
+        p_net.addArc(Arc("5a", "2t", "4p", 2));
+        
+        p_net.addArc(Arc("6a", "4p", "1t", 2));
+    }
 
 
     int64_t sleep_time;
@@ -98,12 +113,10 @@ int main()
         // }
 
         //find time to next transition timeout and fire all elapsed timers
-        int64_t timer_lowest_time = SimUtil::checkTimerState(p_net);
+        int64_t timer_lowest_time = SimUtil::evaluateTimerState(p_net);
         if(timer_lowest_time < sleep_time){
             sleep_time = timer_lowest_time;
         }
-
-        //std::cout << "\n\n" << sleep_time << "\n\n";
 
         //exiting condition
         if(SimUtil::scheduled_timers.empty()){
@@ -118,6 +131,10 @@ int main()
     for(auto& pair : p_net.getPlaces()){
         std::cout << pair.first << " current tokens: " << pair.second.getCurrentTokens() << ".\n";
     }
+
+    //uncomment this to save file (for testing purposes); 
+    // ---!! OVERRIDES INPUT FILE !!---
+    //JsonSerializer::saveFile(json_file_name, p_net, pnet_desc, read_failure);
 
     event_sender->removeObserver(et);
     delete et;
