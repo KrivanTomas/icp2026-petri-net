@@ -10,18 +10,10 @@
 #pragma once
 
 #include "petrinet.h"
+#include "event.h"
 
 class SimUtil{
 public:
-    /**
-     * @brief constructor of SimUtil
-     */
-    SimUtil();
-    /**
-     * @brief constructor of SimUtil, sets the event_sender
-     * @param sender The allocated event_sender
-     */
-    SimUtil(Sender* sender);
 
     /**
      * @brief Function checks if transition has enough tokens to be fired.

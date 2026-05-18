@@ -38,9 +38,9 @@
         }
     ],
     "comment": "",
-    "inputs": [],
+    "inputs": {},
     "name": "",
-    "outputs": [],
+    "outputs": {},
     "places": [
         {
             "action_code": "",
@@ -66,25 +66,27 @@
     "transitions": [
         {
             "action_code": "",
-            "delay_ms": 0,
+            "delay_ms": 50,
             "guard": "",
             "id": "1t",
             "input_event": ""
         },
         {
             "action_code": "",
-            "delay_ms": 0,
+            "delay_ms": "timeout",
             "guard": "",
             "id": "2t",
             "input_event": ""
         },
         {
             "action_code": "",
-            "delay_ms": 0,
+            "delay_ms": 10,
             "guard": "",
             "id": "3t",
             "input_event": ""
         }
     ],
-    "variables": []
+    "variables": {
+        "timeout": "1000"
+    }
 }

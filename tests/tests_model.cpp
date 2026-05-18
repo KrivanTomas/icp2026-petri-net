@@ -36,5 +36,5 @@ TEST(Data, InputsVariables) {
 
     EXPECT_TRUE(test_net.isInputDefined("condition"));
     EXPECT_EQ(test_net.getInputValue("condition"), "3524165");
-    EXPECT_EQ(test_net.getVariable("timeout"), "100");
+    EXPECT_EQ(test_net.getVariableValue("timeout"), "100");
 }

@@ -92,10 +92,9 @@ void MainWindow::openFile() {
         QString file = dialog.selectedFiles().first();
 
         std::string msg;
-        descriptor descr;
 
         PetriNet *new_net = new PetriNet;
-        if(!JsonSerializer::loadFile(file.toStdString(), *new_net, descr, msg)) {
+        if(!JsonSerializer::loadFile(file.toStdString(), *new_net, msg)) {
             std::cerr << msg << std::endl;
             return;
         }
@@ -114,9 +113,8 @@ void MainWindow::saveFile() {
     dialog.setFileMode(QFileDialog::AnyFile);
     if(dialog.exec()) {
         std::string msg;
-        descriptor descr;
         QString file = dialog.selectedFiles().first();
-        if(!JsonSerializer::saveFile(file.toStdString(), *net, descr, msg)) {
+        if(!JsonSerializer::saveFile(file.toStdString(), *net, msg)) {
             std::cerr << msg << std::endl;
             return;
         }

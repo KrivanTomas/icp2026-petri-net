@@ -9,6 +9,8 @@
 
 #include "include/json_serializer.h"
 #include "nlohmann/json.hpp"
+#include <iostream>
+
 
 #include <fstream>
 
@@ -34,7 +36,7 @@ static int jsonToInteger(const json& object, const std::string& key, int fallbac
     return fallback;
 }
 
-bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, descriptor& net_descriptor, std::string& error_msg) {
+bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, std::string& error_msg) {
     std::ifstream input_file(file);
     if(!input_file.is_open()) {
         error_msg = "Cannot open file: " + file;
@@ -52,42 +54,38 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, desc
     }
 
     //extraction of name and comment information from network
-    net_descriptor.name = jsonToString(jsn, "name");
-    net_descriptor.comment = jsonToString(jsn, "comment");
+    petri_net.setName(jsonToString(jsn, "name"));
+    petri_net.setComment(jsonToString(jsn, "comment"));
 
     //extraction of inputs
-    net_descriptor.inputs.clear();
-    if(jsn.contains("inputs") && jsn["inputs"].is_array()) {
-        for(const auto& input : jsn["inputs"]) {
-            if(input.is_string()) {
-                net_descriptor.inputs.push_back(input.get<std::string>());
+    petri_net.clearInputs();
+    if(jsn.contains("inputs")) {
+        for(auto it = jsn["inputs"].begin(); it != jsn["inputs"].end(); ++it) {
+            if(it.value().is_string()) {
+                petri_net.setInputValue(it.key(), it.value().get<std::string>());
             }
         }
     }
     
     //extraction of declared outputs
-    net_descriptor.outputs.clear();
-    if(jsn.contains("outputs") && jsn["outputs"].is_array()) {
-        for(const auto& output : jsn["outputs"]) {
-            if(output.is_string()) {
-                net_descriptor.outputs.push_back(output.get<std::string>());
+    petri_net.clearOutputs();
+    if(jsn.contains("outputs")) {
+        for(auto it = jsn["outputs"].begin(); it != jsn["outputs"].end(); ++it) {
+            if(it.value().is_string()) {
+                petri_net.setOutputValue(it.key(), it.value().get<std::string>());
             }
         }
     }
 
     //extraction of declared variables
-    net_descriptor.variables.clear();
-    if(jsn.contains("variables") && jsn["variables"].is_array()) {
-        for(const auto& var : jsn["variables"]) {
-            if(var.is_string()) {
-                net_descriptor.variables.push_back(var.get<std::string>());
+    petri_net.clearVariables();
+    if(jsn.contains("variables")) {
+        for(auto it = jsn["variables"].begin(); it != jsn["variables"].end(); ++it) {
+            if(it.value().is_string()) {
+                petri_net.setVariable(it.key(), it.value().get<std::string>());
             }
         }
     }
-
-    //sync of name and comment into instance of petri net
-    petri_net.setName(net_descriptor.name);
-    petri_net.setComment(net_descriptor.comment);
 
     //iteration over array and construction of Place objects
     if(jsn.contains("places") && jsn["places"].is_array()) {
@@ -119,6 +117,15 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, desc
             std::string input_event = jsonToString(trans_jsn, "input_event");
             std::string guard = jsonToString(trans_jsn, "guard");
             int delay_ms = jsonToInteger(trans_jsn, "delay_ms", 0);
+            if(trans_jsn["delay_ms"].is_string()){
+                //set internal variable value as delay
+                std::string variable_value = petri_net.getVariableValue(trans_jsn["delay_ms"].get<std::string>());
+                try{
+                    delay_ms = stoi(variable_value);
+                } catch(std::invalid_argument&){
+                    std::cout << "Trying to use non-numerical " << variable_value << " as delay. Setting timer to 0.\n";
+                }
+            }
             std::string action_code = jsonToString(trans_jsn, "action_code");
 
             if(id.empty()) {
@@ -163,14 +170,14 @@ bool JsonSerializer::loadFile(const std::string& file, PetriNet& petri_net, desc
     return true;
 }
 
-bool JsonSerializer::saveFile(const std::string& file, PetriNet& petri_net, const descriptor& net_descriptor, std::string& error_msg) {
+bool JsonSerializer::saveFile(const std::string& file, PetriNet& petri_net, std::string& error_msg) {
     json jsn;
     //descriptor
-    jsn["name"] = net_descriptor.name;
-    jsn["comment"] = net_descriptor.comment;
-    jsn["inputs"] = net_descriptor.inputs;
-    jsn["outputs"] = net_descriptor.outputs;
-    jsn["variables"] = net_descriptor.variables;
+    jsn["name"] = petri_net.getName();
+    jsn["comment"] = petri_net.getComment();
+    jsn["inputs"] = petri_net.getInputs();
+    jsn["outputs"] = petri_net.getOutputs();
+    jsn["variables"] = petri_net.getVariables();
 
     //serialazation of all places
     jsn["places"] = json::array();

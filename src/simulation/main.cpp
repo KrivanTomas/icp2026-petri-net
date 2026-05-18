@@ -55,18 +55,18 @@ int main(int argc, char** argv)
         json_file_name = argv[1];
     }
 
-    std::cout << "Hello from simulation!\n";
+    bool enable_debug_output = false;
 
     SimUtil::setEventSender(event_sender);
     SimUtil::initializeTime();
     
     EventTester* et = new EventTester();
     event_sender->addObserver(et);
-    descriptor pnet_desc = descriptor();
     std::string read_failure = "JSON was read correctly";
-    if(!JsonSerializer::loadFile(json_file_name, p_net, pnet_desc, read_failure)){
+    if(!JsonSerializer::loadFile(json_file_name, p_net, read_failure)){
         std::cout << read_failure << "\n";
-
+        return 1;
+        
         // failed to read from json, generate example net        
         p_net = PetriNet();
         
@@ -86,24 +86,32 @@ int main(int argc, char** argv)
         
         p_net.addArc(Arc("6a", "4p", "1t", 2));
     }
-
+    else {
+        if(enable_debug_output)
+            std::cout << "File loaded succesfully\n";
+    }
 
     int64_t sleep_time;
     bool exit_main_loop = false;
 
-    SimUtil::addTimer("2t", 250);
-    SimUtil::addTimer("2t", 40);
-    SimUtil::addTimer("2t", 30);
-    SimUtil::addTimer("1t", 65);
-    SimUtil::addTimer("1t", 50);
+    //initiate timers for non-zero delay values
+    for(auto pair : p_net.getTransitions()) {
+        if(pair.second.getDelay() != 0){
+            //set scheduled timeout
+            SimUtil::addTimer(pair.first, pair.second.getDelay());
+        }
+    }
 
-    std::cout << "Total timer count: " << SimUtil::scheduled_timers.size() << "\n";
     std::string manual_input = "";
     do{
         sleep_time = 100;
-        std::cout << "old time: " << SimUtil::getNetTime() << " ---- new time: ";
+        if(enable_debug_output)
+            std::cout << "old time: " << SimUtil::getNetTime() << " ---- new time: ";
+
         SimUtil::updateTime();
-        std::cout << SimUtil::getNetTime() << "\n";
+
+        if(enable_debug_output)
+            std::cout << SimUtil::getNetTime() << "\n";
         //listen to tcp
         // if(tcp_updated)
         // {
@@ -130,13 +138,14 @@ int main(int argc, char** argv)
     } while(!exit_main_loop);
 
     //print all place tokens
-    for(auto& pair : p_net.getPlaces()){
-        std::cout << pair.first << " current tokens: " << pair.second.getCurrentTokens() << ".\n";
-    }
+    if(enable_debug_output)
+        for(auto& pair : p_net.getPlaces()){
+            std::cout << pair.first << " current tokens: " << pair.second.getCurrentTokens() << ".\n";
+        }
 
     //uncomment this to save file (for testing purposes); 
     // ---!! OVERRIDES INPUT FILE !!---
-    //JsonSerializer::saveFile(json_file_name, p_net, pnet_desc, read_failure);
+    //JsonSerializer::saveFile(json_file_name, p_net, read_failure);
 
     event_sender->removeObserver(et);
     delete et;

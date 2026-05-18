@@ -3,12 +3,11 @@
  *
  * @author
  *     Tomáš Kudera
- *     Lukáš Kurtin
  */
 
 
 #include "petrinet.h"
-
+#include <stdexcept>
 
 PetriNet::PetriNet(){
     
@@ -192,7 +191,35 @@ void PetriNet::setInputValue(const std::string& input_name, const std::string& v
     internal_inputs[input_name] = value;
 }
 
-std::string PetriNet::getVariable(const std::string& var_name) const {
+std::map<std::string, std::string> PetriNet::getInputs() {
+    return internal_inputs;
+}
+
+void PetriNet::clearInputs() {
+    internal_inputs.clear();
+}
+
+std::string PetriNet::getOutputValue(const std::string& output_name) const {
+    auto it = internal_outputs.find(output_name);
+    if(it != internal_outputs.end()) {
+        return it->second;
+    }
+    return "";
+}
+
+void PetriNet::setOutputValue(const std::string& output_name, const std::string& value) {
+    internal_outputs[output_name] = value;
+}
+
+std::map<std::string, std::string> PetriNet::getOutputs() {
+    return internal_outputs;
+}
+
+void PetriNet::clearOutputs() {
+    internal_outputs.clear();
+}
+
+std::string PetriNet::getVariableValue(const std::string& var_name) const {
     auto it = internal_variables.find(var_name);
     if(it != internal_variables.end()) {
         return it->second;
@@ -200,10 +227,18 @@ std::string PetriNet::getVariable(const std::string& var_name) const {
     return "";
 }
 
+std::map<std::string, std::string> PetriNet::getVariables() const {
+    return internal_variables;
+}
+
+
 void PetriNet::setVariable(const std::string& var_name, const std::string& value) {
     internal_variables[var_name] = value;
 }
 
+void PetriNet::clearVariables() {
+    internal_variables.clear();
+}
 
 void PetriNet::reset() {
     //reset place tokens

@@ -5,7 +5,6 @@
  *
  * @author
  *     Tomáš Kudera
- *     Lukáš Kurtin
  */
 
 
@@ -15,12 +14,10 @@
 #include <string>
 #include <map>
 #include <set>
-#include <stdexcept>
 #include <chrono>
 #include "place.h"
 #include "transition.h"
 #include "arc.h"
-#include "event.h"
 
 class SimUtil;
 
@@ -28,7 +25,7 @@ class SimUtil;
  * @class PetriNet
  * @brief Main container of Petri Net components
  */
-class PetriNet
+class PetriNet 
 {
     friend class SimUtil;
 public:
@@ -135,32 +132,79 @@ public:
     void setComment(const std::string& comment);
 
     /**
-     * @brief Retrieves last value of external input.
+     * @brief Retrieves last value of internal input.
      * @param input_name The identifier of the input.
      * @return The stored value, or an empty string. 
      */
     std::string getInputValue(const std::string& input_name) const;
 
     /**
-     * @brief Sets last known value of an external input.
+     * @brief Sets last known value of an internal input. Creates a new one if it doesnt yet exist.
      * @param input_name The identifier of the input.
      * @param value New value.
      */
     void setInputValue(const std::string& input_name, const std::string& value);
 
     /**
+     * @brief Gets the internal_inputs map
+     * @return map of the inputs
+     */
+    std::map<std::string, std::string> getInputs();
+
+    /**
+     * @brief Clears the internal_inputs map
+     */
+    void clearInputs();
+
+    /**
+     * @brief Retrieves last value of internal output.
+     * @param output_name The identifier of the output.
+     * @return The stored value, or an empty string. 
+     */
+    std::string getOutputValue(const std::string& output_name) const;
+
+    /**
+     * @brief Sets value of an internal output. Creates a new one if it doesnt yet exist.
+     * @param output_name The identifier of the output.
+     * @param value New value.
+     */
+    void setOutputValue(const std::string& output_name, const std::string& value);
+
+    /**
+     * @brief Gets the internal_outputs map
+     * @return map of the outputs
+     */
+    std::map<std::string, std::string> getOutputs();
+
+    /**
+     * @brief Clears the internal_outputs map
+     */
+    void clearOutputs();
+
+    /**
      * @brief Retrieves the value of an internal network variable.
      * @param var_name Name of the variable.
      * @return The stored value, or an emty string.
      */
-    std::string getVariable(const std::string& var_name) const;
+    std::string getVariableValue(const std::string& var_name) const;
 
     /**
-     * @brief Sets the value of an internal network variable.
+     * @brief Gets the internal_variables map
+     * @return The whole map
+     */
+    std::map<std::string, std::string> getVariables() const;
+
+    /**
+     * @brief Sets the value of an internal network variable. Creates a new one if it doesnt yet exist.
      * @param var_name Name of the variable.
      * @param value New value.
      */
     void setVariable(const std::string& var_name, const std::string& value);
+
+    /**
+     * @brief Clears the internal_variables map
+     */
+    void clearVariables();
 
     /**
      * @brief Resets the network into initial state.
@@ -179,18 +223,17 @@ public:
      */
     bool isInputDefined(const std::string& input_name) const;
 
-    
     //getters
     std::map<std::string, Place>& getPlaces();
     std::map<std::string, Transition>& getTransitions();
     std::map<std::string, Arc>& getArcs();
-
 
 private:
     std::string net_name = "Unknown petrinet";
     std::string net_comment = "";
 
     std::map<std::string, std::string> internal_inputs;
+    std::map<std::string, std::string> internal_outputs;
     std::map<std::string, std::string> internal_variables;
 
     std::map<std::string, Place> places;
