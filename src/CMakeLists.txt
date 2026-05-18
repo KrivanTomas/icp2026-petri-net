@@ -84,6 +84,7 @@ add_executable(main
 )
 target_link_libraries(main 
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets main_window net_model editor
+)
 
 # set main binary location to ./build/main instead of ./build/src/main
 set_target_properties(main 

@@ -18,6 +18,9 @@ QValidator::State ModelIdValidator::validate(QString &input, int &) const {
     PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
     if(net == nullptr) throw std::runtime_error("ModelIdValidator: PetriNet sync not set");
 
+    if(input.isEmpty())
+        return QValidator::Intermediate;
+
     // check that id does not exist
     if(net->getPlaces().find(input.toStdString()) != net->getPlaces().end())
         return QValidator::Intermediate;
