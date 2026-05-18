@@ -32,6 +32,8 @@ public:
         }
     }
     virtual void onEvent(Event event, std::string str, int number) {
+        str = str;
+        number = number;
         if(event == Event::update_tokens_){
             //std::cout << "Update '" << str << "' tokens by " << number << "\n";
             //TODO update GUI
