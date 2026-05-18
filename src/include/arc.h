@@ -69,35 +69,9 @@ public:
      */
     void setWeight(int weight);
 
-    /**
-     * @brief Set the 2D position
-     * @param x X-axis position
-     * @param y Y-axis position
-     */
-    void setPosition(float x, float y);
-
-    /**
-     * @brief Set the X-axis position
-     * @param x value
-     */
-    void setPosX(float x);
-
-    /**
-     * @brief Set the Y-axis position
-     * @param y value
-     */
-    void setPosY(float y);
-
-    /**
-     * @brief Get the 2D position
-     * @return Pair containing x and y coordinates.
-     */
-    std::pair<float, float> getPosition() const;
-    
 private:
     std::string id;
     std::string source_id;
     std::string target_id;
     int weight;
-    std::pair<float, float> gui_position;
 };

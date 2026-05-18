@@ -18,6 +18,7 @@
 #include <QSignalMapper>
 #include <QBrush>
 #include <QFileDialog>
+#include <QProcess>
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -48,10 +49,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openFile);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveFile);
 
+    // Simulation
+    connect(ui->actionStart, &QAction::triggered, this, &MainWindow::startSimulation);
+
     // Property ui
     place_editor_ui = new PlacePropertyEditor();
     transition_editor_ui = new TransitionPropertyEditor();
     arc_editor_ui = new ArcPropertyEditor();
+
 
     // Default mode
     scene->setMode(EditorGraphicsScene::Mode::Edit);
@@ -63,8 +68,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     net = new PetriNet();
     EditorNetModelSceneSync::setCurrentNet(net);
-
     EditorNetModelSceneSync::syncSceneWithModel(scene);
+    file_dirty = false;
 }
 
 MainWindow::~MainWindow()
@@ -78,47 +83,84 @@ MainWindow::~MainWindow()
 }  
 
 void MainWindow::newFile() {
-    // TODO if not saved
+    if(file_dirty) {
+        auto reply = QMessageBox::question(
+            this,
+            tr("Unsaved Changes"),
+            tr("You have unsaved changes. Do you want to save before creating a new net?"),
+            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel
+        );
+
+        if(reply == QMessageBox::Cancel) {
+            return;
+        } 
+        else if(reply == QMessageBox::Save) {
+            saveFile();
+        }
+    }
+
     scene->clear();
     net->clear();
     EditorNetModelSceneSync::syncSceneWithModel(scene);
     EditorNetModelSceneSync::resetCounters();
+    file_dirty = false;
 }
 
 void MainWindow::openFile() {
-    QFileDialog dialog(this, tr("Open a petri net project"), "", "PetriNet file (*.json)");
-    dialog.setFileMode(QFileDialog::ExistingFile);
-    if(dialog.exec()) {
-        QString file = dialog.selectedFiles().first();
+    if(!file_dirty) {
+        QFileDialog dialog(this, tr("Open a petri net project"), "", "PetriNet file (*.json)");
+        dialog.setFileMode(QFileDialog::ExistingFile);
+        if(dialog.exec()) {
+            QString file = dialog.selectedFiles().first();
 
-        std::string msg;
+            std::string msg;
 
-        PetriNet *new_net = new PetriNet;
-        if(!JsonSerializer::loadFile(file.toStdString(), *new_net, msg)) {
-            std::cerr << msg << std::endl;
-            return;
+            PetriNet *new_net = new PetriNet;
+            if(!JsonSerializer::loadFile(file.toStdString(), *new_net, msg)) {
+                std::cerr << msg << std::endl;
+                return;
+            }
+
+            scene->clear();
+            delete net;
+            net = new_net;
+            EditorNetModelSceneSync::setCurrentNet(net);
+            EditorNetModelSceneSync::resetCounters();
+            EditorNetModelSceneSync::syncSceneWithModel(scene);
         }
-
-        scene->clear();
-        delete net;
-        net = new_net;
-        EditorNetModelSceneSync::setCurrentNet(net);
-        EditorNetModelSceneSync::resetCounters();
-        EditorNetModelSceneSync::syncSceneWithModel(scene);
+    } 
+    else {
+        QMessageBox::warning(
+            this,
+            tr("Unsaved Changes"),
+            tr("You have unsaved changes. Please save beforehand"),
+            QMessageBox::Ok 
+        );
     }
 }
 
 void MainWindow::saveFile() {
-    QFileDialog dialog(this, tr("Save a petri net project"), "", "PetriNet file (*.json)");
-    dialog.setFileMode(QFileDialog::AnyFile);
-    if(dialog.exec()) {
+    if(edited_file_path.empty()) {
+        QFileDialog dialog(this, tr("Save a petri net project"), "", "PetriNet file (*.json)");
+        dialog.setFileMode(QFileDialog::AnyFile);
+        if(dialog.exec()) {
+            std::string msg;
+            QString file = dialog.selectedFiles().first();
+            if(!JsonSerializer::saveFile(file.toStdString(), *net, msg)) {
+                std::cerr << msg << std::endl;
+                return;
+            }
+            edited_file_path = file.toStdString();
+        }
+    }
+    else {
         std::string msg;
-        QString file = dialog.selectedFiles().first();
-        if(!JsonSerializer::saveFile(file.toStdString(), *net, msg)) {
+        if(!JsonSerializer::saveFile(edited_file_path, *net, msg)) {
             std::cerr << msg << std::endl;
             return;
         }
     }
+    file_dirty = false;
 }
 
 void MainWindow::onEditorModeChanged(EditorGraphicsScene::Mode mode) {
@@ -247,24 +289,40 @@ void MainWindow::onEditorDeleteSelection() {
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    // TODO save manager
-    if(true) {
+    if(file_dirty) {
         auto reply = QMessageBox::question(
-            this,
-            tr("Unsaved Changes"),
-            tr("You have unsaved changes. Do you want to save before closing?"),
-            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel
-        );
+                this,
+                tr("Unsaved Changes"),
+                tr("You have unsaved changes. Do you want to save before closing?"),
+                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel
+                );
 
         if(reply == QMessageBox::Cancel) {
             event->ignore();
             return;
         } 
         else if(reply == QMessageBox::Save) {
-            // TODO save(); 
+            saveFile();
         }
     }
-
     event->accept();
 }
 
+void MainWindow::startSimulation() {
+    if(edited_file_path.empty() || file_dirty) {
+        QMessageBox::warning(
+            this,
+            tr("Unsaved Changes"),
+            tr("You have unsaved changes. Please save beforehand"),
+            QMessageBox::Ok 
+        );
+        return;
+    }
+
+    QString program = "./simulation";
+    QStringList arguments;
+    arguments << QString::fromStdString(edited_file_path);
+    QProcess *process = new QProcess(this);
+    process->start(program, arguments);
+    
+}

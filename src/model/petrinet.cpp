@@ -90,7 +90,7 @@ void PetriNet::changePlaceId(std::string old_id, std::string new_id) {
     }
     Place p = places.at(old_id);
     p.setId(new_id);
-    for(auto pair : arcs) {
+    for(auto& pair : arcs) {
         if(pair.second.getSourceId() == old_id) {
             pair.second.setSourceId(new_id);
         }
@@ -119,7 +119,7 @@ void PetriNet::changeTransitionId(std::string old_id, std::string new_id) {
     }
     Transition t = transitions.at(old_id);
     t.setId(new_id);
-    for(auto pair : arcs) {
+    for(auto& pair : arcs) {
         if(pair.second.getSourceId() == old_id) {
             pair.second.setSourceId(new_id);
         }
