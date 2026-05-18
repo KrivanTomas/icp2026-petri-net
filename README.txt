@@ -33,4 +33,4 @@ Inspiration / Third-party code and libraries
     - Artificial intelligence was used for the model files to explain implementation details
     - Editor implementation was inspired by: https://doc.qt.io/qt-6/qtwidgets-graphicsview-diagramscene-example.html
     - Simulation's "events" are an implementation of an Observer, inpired by: https://gameprogrammingpatterns.com/observer.html
-
+    - TCP communication was inspired by: https://www.youtube.com/watch?v=cNdlrbZSkyQ
