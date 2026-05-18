@@ -57,3 +57,20 @@ bool Transition::isEnabled() const {
 void Transition::setEnabled(bool set_enabled) {
     enabled = set_enabled;
 }
+
+void Transition::setPosition(float x, float y) {
+    gui_position.first = x;
+    gui_position.second = y;
+}
+
+void Transition::setPosX(float x) {
+    gui_position.first = x;
+}
+
+void Transition::setPosY(float y) {
+    gui_position.second = y;
+}
+
+std::pair<float, float> Transition::getPosition() {
+    return gui_position;
+}

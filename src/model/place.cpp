@@ -49,3 +49,20 @@ int Place::getLastTimeChange() const {
 void Place::setLastTimeChange(int64_t time_ms) {
     last_change_time_ms = time_ms;
 }
+
+void Place::setPosition(float x, float y) {
+    gui_position.first = x;
+    gui_position.second = y;
+}
+
+void Place::setPosX(float x) {
+    gui_position.first = x;
+}
+
+void Place::setPosY(float y) {
+    gui_position.second = y;
+}
+
+std::pair<float, float> Place::getPosition() {
+    return gui_position;
+}

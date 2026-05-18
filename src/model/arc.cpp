@@ -42,3 +42,20 @@ int Arc::getWeight() const {
 void Arc::setWeight(int weight) {
     this->weight = weight;
 }
+
+void Arc::setPosition(float x, float y) {
+    gui_position.first = x;
+    gui_position.second = y;
+}
+
+void Arc::setPosX(float x) {
+    gui_position.first = x;
+}
+
+void Arc::setPosY(float y) {
+    gui_position.second = y;
+}
+
+std::pair<float, float> Arc::getPosition() {
+    return gui_position;
+}

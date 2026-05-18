@@ -80,10 +80,36 @@ public:
      */
     void setLastTimeChange(int64_t time_ms);
 
+        /**
+     * @brief Set the 2D position
+     * @param x X-axis position
+     * @param y Y-axis position
+     */
+    void setPosition(float x, float y);
+
+    /**
+     * @brief Set the X-axis position
+     * @param x value
+     */
+    void setPosX(float x);
+
+    /**
+     * @brief Set the Y-axis position
+     * @param y value
+     */
+    void setPosY(float y);
+
+    /**
+     * @brief Get the 2D position
+     * @return Pair containing x and y coordinates.
+     */
+    std::pair<float, float> getPosition();
+
 private:
     std::string id;
     int initial_tokens;
     int current_tokens;
     std::string action_code;
     int64_t last_change_time_ms = 0;
+    std::pair<float, float> gui_position;
 };
