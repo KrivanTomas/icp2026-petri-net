@@ -14,13 +14,12 @@ run: build
 doxygen:
 	doxygen
 	
-pack:
-	echo todo
+pack: clean
+	zip -r petri-net.zip ./src ./doc ./tests ./examples ./Makefile ./Doxyfile ./CMakeLists.txt ./.editorconfig ./README.md ./README.txt
 
 dir_build:
 	mkdir -p ./build
 
 clean:
-	rm -rf ./doc/doxygen
+	rm -rf ./doc/html
 	rm -rf ./build
-	echo "todo others"

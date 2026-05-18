@@ -1,9 +1,9 @@
 /**
  * @file arc_property_editor.h
  *
- * @brief Header file for the arc property gui editor widget
+ * @brief Wrapper for EditorArcItem property editor GUI
  *
-  * @author
+ * @author
  *     Tomáš Křivan
  */
 
@@ -18,18 +18,43 @@ namespace Ui {
 };
 QT_END_NAMESPACE
 
-
+/**
+ * @brief EditorArcItem property editor panel widget
+ */
 class ArcPropertyEditor : public QWidget
 {
     Q_OBJECT
-    
 public:
+    /**
+     * @brief Create and initialize panel GUI
+     *
+     * @param parent
+     */
     ArcPropertyEditor(QWidget *parent = nullptr);
+
+    /**
+     * @brief Dealocates GUI resources
+     */
     ~ArcPropertyEditor();
+
+    /**
+     * @brief Take the provided item and synchronize panel inputs with it's properties
+     *
+     * @param selected
+     */
     void syncPanelToSelected(EditorArcItem *selected);
 
 public slots:
+    /**
+     * @brief After editing the id property, update it in the underlying model
+     */
     void updateModelId();
+
+    /**
+     * @brief After editing the weight property, update it in the underlying model
+     *
+     * @param weight
+     */
     void updateModelWeight(int weight);
 
 private:

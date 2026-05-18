@@ -1,5 +1,5 @@
 /**
- * @file editor_node_item.cpp
+ * @file editor_node.cpp
  *
  * @brief Contains the `EditorNodeItem` class for rendering petri net node-like objects.
  *

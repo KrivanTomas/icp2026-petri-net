@@ -101,6 +101,8 @@ QVariant EditorPlaceItem::itemChange(GraphicsItemChange change, const QVariant &
     if (change == QGraphicsItem::ItemPositionChange) {
         for (EditorArcItem *arc : arcs)
             arc->updatePosition();
+
+        setPosition(pos());
     }
 
     return value;
@@ -170,4 +172,23 @@ std::string EditorPlaceItem::getActions() const {
         throw std::runtime_error("EditorPlaceItem::getActions(): Model desync");
 
     return net->getPlaces().at(model_id).getActionCode();
+}
+
+void EditorPlaceItem::setPosition(QPointF pos) {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    if(net->getPlaces().find(model_id) == net->getPlaces().end())
+        throw std::runtime_error("EditorPlaceItem::setPosition(): Model desync");
+
+    net->getPlaces().at(model_id).setPosition(pos.x(), pos.y());
+}
+
+QPointF EditorPlaceItem::getPosition() const {
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) throw std::runtime_error("PetriNet sync not set");
+    if(net->getPlaces().find(model_id) == net->getPlaces().end())
+        throw std::runtime_error("EditorPlaceItem::getPosition(): Model desync");
+
+    auto pair = net->getPlaces().at(model_id).getPosition();
+    return QPointF(pair.first, pair.second);
 }

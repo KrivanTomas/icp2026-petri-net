@@ -27,8 +27,8 @@ void EditorNetModelSceneSync::syncSceneWithModel(EditorGraphicsScene *scene) {
         EditorPlaceItem *item = new EditorPlaceItem();
 
         item->setId(pair.first);
-
         scene->addItem(item);
+        item->setPos(item->getPosition());
     }
 
     // Insert transitions from model
@@ -36,8 +36,8 @@ void EditorNetModelSceneSync::syncSceneWithModel(EditorGraphicsScene *scene) {
         EditorTransitionItem *item = new EditorTransitionItem();
 
         item->setId(pair.first);
-
         scene->addItem(item);
+        item->setPos(item->getPosition());
     }
 
     // Insert arcs from model
@@ -90,6 +90,7 @@ void EditorNetModelSceneSync::syncSceneWithModel(EditorGraphicsScene *scene) {
 
         item->setId(pair.first);
         scene->addItem(item);
+        item->updatePosition();
     }
 }
 
