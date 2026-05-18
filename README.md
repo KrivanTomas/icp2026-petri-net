@@ -37,6 +37,7 @@ You can then write one-word commands in this new terminal, supported are: "help"
 If, for example, your .json file has transition input events, you can write that event's name into the terminal
 and it will try and fire that transition.
 Be careful to not close the main application without proper exiting, as the port could become unavailable.
+If you do not open the sending terminal, forcefully terminate the program.
 
 
 ## Inspiration / Third-party code and libraries
