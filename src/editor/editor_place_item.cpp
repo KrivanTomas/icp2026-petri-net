@@ -33,14 +33,22 @@ void EditorPlaceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     if(net == nullptr) return; 
     if(net->getPlaces().find(model_id) != net->getPlaces().end()) {
         int tokens = net->getPlaces().at(model_id).getCurrentTokens();
+        std::string id = net->getPlaces().at(model_id).getId();
 
-        // prepare painter
-        painter->setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        painter->setBrush(QBrush(Qt::black, Qt::SolidPattern));
+        // draw id
+        painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         QFont font = painter->font();
         font.setPixelSize(24);
+        font.setBold(true);
         painter->setFont(font);
+        painter->drawText(QRect(-100, -80, 200, 30), Qt::AlignCenter, QString::fromStdString(id));
 
+        // prepare painter for tokens
+        painter->setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter->setBrush(QBrush(Qt::black, Qt::SolidPattern));
+
+
+        // draw tokens
         int token_size = 18;
         int spacing = 22;
         if(tokens <= 0) return;
@@ -81,6 +89,11 @@ void EditorPlaceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
             painter->drawText(rect(), Qt::AlignCenter, QString::fromStdString(std::to_string(tokens)));
         }
     }
+}
+
+
+QRectF EditorPlaceItem::boundingRect() const {
+    return QRectF(-100, -80, 200, 130);
 }
 
 QVariant EditorPlaceItem::itemChange(GraphicsItemChange change, const QVariant &value)

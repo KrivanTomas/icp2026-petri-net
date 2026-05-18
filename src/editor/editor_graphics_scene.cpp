@@ -15,7 +15,6 @@
 #include <QGraphicsSceneMouseEvent>
 
 EditorGraphicsScene::EditorGraphicsScene(QObject *parent) : QGraphicsScene(parent) {
-    //setBackgroundBrush(QBrush(QColor(0,0,0), Qt::CrossPattern));
     editorMode = Mode::Edit;
     insertObject = InsertObject::Place;
 }

@@ -15,6 +15,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QSignalMapper>
+#include <QBrush>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,32 +28,35 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new EditorGraphicsScene(this);
     scene->setSceneRect(0, 0, 5000, 5000);
 
+    // Modes
     connect(ui->actionModeEdit, &QAction::triggered, scene, &EditorGraphicsScene::setEditMode);
     connect(ui->actionModeInsert, &QAction::triggered, scene, &EditorGraphicsScene::setInsertMode);
-
+    // Insert modes
     connect(ui->actionPlace, &QAction::triggered, scene, &EditorGraphicsScene::setInsertObjectPlace);
     connect(ui->actionTransition, &QAction::triggered, scene, &EditorGraphicsScene::setInsertObjectTransition);
     connect(ui->actionArc, &QAction::triggered, scene, &EditorGraphicsScene::setInsertObjectArc);
-
-
+    // Selection
     connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::onEditorDeleteSelection);
     connect(scene, &EditorGraphicsScene::modeChanged, this, &MainWindow::onEditorModeChanged);
     connect(scene, &EditorGraphicsScene::selectionChanged, this, &MainWindow::onEditorSelectionChanged);
 
-
-    scene->setMode(EditorGraphicsScene::Mode::Edit);
-
-    ui->graphicsView->setScene(scene);
-
-
+    // Property ui
     place_editor_ui = new PlacePropertyEditor();
     transition_editor_ui = new TransitionPropertyEditor();
     arc_editor_ui = new ArcPropertyEditor();
 
+    // Default mode
+    scene->setMode(EditorGraphicsScene::Mode::Edit);
+
+    ui->graphicsView->setScene(scene);
+    ui->graphicsView->show();
+    
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(210,210,210), Qt::Dense1Pattern));
+
     net = new PetriNet();
     EditorNetModelSceneSync::setCurrentNet(net);
 
-    net->addPlace(Place("Wawa"));
+    // TODO load files
 
     EditorNetModelSceneSync::syncSceneWithModel(scene);
 }

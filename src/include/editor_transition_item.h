@@ -30,6 +30,9 @@ public:
     int type() const override { return Type; }
     void removeArcs() override;
 
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+    QRectF boundingRect() const override;
+
     void setId(std::string id);
     std::string getId() const;
 

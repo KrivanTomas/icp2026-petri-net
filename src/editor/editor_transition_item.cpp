@@ -12,6 +12,7 @@
 #include "../include/editor_net_model_sync.h"
 
 #include <QPen>
+#include <QPainter>
 #include <QGraphicsScene>
 
 EditorTransitionItem::EditorTransitionItem() : QGraphicsRectItem(-25,-50,50,100) {
@@ -22,6 +23,32 @@ EditorTransitionItem::EditorTransitionItem() : QGraphicsRectItem(-25,-50,50,100)
     setBrush(QBrush(QColor(255,255,255), Qt::SolidPattern));
     setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 }
+
+
+void EditorTransitionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    this->QGraphicsRectItem::paint(painter, option, widget);
+
+
+    PetriNet *net = EditorNetModelSceneSync::getCurrentNet();
+    if(net == nullptr) return; 
+    if(net->getTransitions().find(model_id) != net->getTransitions().end()) {
+        std::string id = net->getTransitions().at(model_id).getId();
+
+        // draw id
+        painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        QFont font = painter->font();
+        font.setPixelSize(24);
+        font.setBold(true);
+        painter->setFont(font);
+        painter->drawText(QRect(-100, -80, 200, 30), Qt::AlignCenter, QString::fromStdString(id));
+    }
+}
+
+QRectF EditorTransitionItem::boundingRect() const {
+    return QRectF(-100, -80, 200, 130);
+}
+
+
 
 QVariant EditorTransitionItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
