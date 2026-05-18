@@ -23,11 +23,21 @@ Current implementation status
     - Starting a process simulation from GUI, passing petri net file as an argument
     - Partial simulation side TCP communication maybe?
 
- NOT IMPLEMENTED
+NOT IMPLEMENTED
     - Robust editor file dirty flags
     - Communication between GUI and simulation
     - Inscryption language support (actions and guard conditions)
     
+SIMULATION TESTING
+Simulation was unfortunately not connected to the GUI window. However, it supports very rough tcp communication.
+If you run ./simulation; it will begin simulating scheduled transmitions and start looking for an open client at port 20003 to receive data from. 
+You can connect through another terminal by using the command "telnet localhost 20003".
+You can then write one-word commands in this new terminal, supported are: "help", "exit" and event names.
+If, for example, your .json file has transition input events, you can write that event's name into the terminal
+and it will try and fire that transition.
+Be careful to not close the main application without proper exiting, as the port could become unavailable.
+
+
 Inspiration / Third-party code and libraries
     - json_serialization.h and .cpp files - the open-source C++ library nlohmann/json was used for serialization and deserialization
     - Artificial intelligence was used for the model files to explain implementation details
