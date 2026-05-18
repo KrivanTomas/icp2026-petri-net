@@ -10,6 +10,16 @@
 
 #include <iostream>
 #include <thread>
+
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <string.h>
+#include <string>
+
+#include <cstring>
 #include "../include/petrinet.h"
 #include "../include/event.h"
 #include "../include/sim_util.h"
@@ -18,17 +28,28 @@
 PetriNet p_net;
 Sender* event_sender = new Sender();
 
-class EventTester : public Observer
+//variables for thread communication (events)
+bool exit_main_loop = false;
+std::string fire_event_name = "";
+int client_socket;
+
+class EventListener : public Observer
 {
 public:
-    EventTester() = default;
+    EventListener() = default;
+
     virtual void onEvent(Event event, std::string str) {
         if(event == Event::fire_){
-            std::cout << "Got event to fire " << str << "\n";
+            std::cout << "Fired transition " << str << "\n";
+
+            for(auto& pair : p_net.getPlaces()){
+                std::cout << pair.first << " current tokens: " << pair.second.getCurrentTokens() << ".\n";
+            }
             //TODO log to GUI
         }
-        else {
-            std::cout << "IDK what to do with this event: str\n";
+        else if(event == Event::timer_ignored_){
+            std::cout << "Transition could not be fired. Check source place tokens.\n";
+            //TODO log to GUI   //timeout ignored
         }
     }
     virtual void onEvent(Event event, std::string str, int number) {
@@ -45,6 +66,82 @@ public:
     
 };
 
+void communicate(){
+    int server_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if(server_socket == -1){
+        std::cout << "Socket could not be created.\n";
+        return;
+    }
+
+    sockaddr_in hint;
+    hint.sin_family = AF_INET;
+    hint.sin_port = htons(20003);
+    inet_pton(AF_INET, "127.0.0.1", &hint.sin_addr);
+
+    if(bind(server_socket, (sockaddr*)&hint, sizeof(hint)) == -1){
+        std::cout << "Couldnt bind the address\n";
+        return;
+    }
+
+    if(listen(server_socket, SOMAXCONN) == -1){
+        std::cout << "Listening error\n";
+        return;
+    }
+
+    sockaddr_in client;
+    socklen_t client_size = sizeof(client);
+    char host[NI_MAXHOST];
+    char svc[NI_MAXSERV];
+
+    int client_socket = accept(server_socket, (sockaddr*)&client, &client_size);
+    if(client_socket == -1){
+        std::cout << "Couldnt connect to client\n";
+        return;
+    }
+
+    close(server_socket);
+
+    memset(host, 0, NI_MAXHOST);
+    memset(svc, 0, NI_MAXSERV);
+
+    int result = getnameinfo((sockaddr*)&client, sizeof(client), host, NI_MAXHOST, svc, NI_MAXSERV, 0);
+    if(result){
+        std::cout << "Connected\n";
+    }
+    else{
+        inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
+        std::cout << "Connected\n";
+    }
+
+    char buf[4096];
+    while(true){
+        memset(buf, 0, 4096);
+        int bytes_received = recv(client_socket, buf, 4096, 0);
+        if(bytes_received == -1){
+            std::cout << "Connection issue\n";
+            break;
+        }
+        if(bytes_received == 0){
+            std::cout << "Client disconnected\n";
+            break;
+        }
+
+        if(std::string(buf, 0, bytes_received-2) == "exit"){
+            exit_main_loop = true;
+            break;
+        }
+        else if(std::string(buf, 0, bytes_received-2) == "help"){
+            std::cout << "Help:\nNapiste jmeno eventu pro jeho vyvolani.\
+            \nPrikazem 'exit' ukoncite zapis, program ceka na uplynuti casovanych odpalu a ukonci se.\
+            \nVzdy po vypaleni prechodu vypise novy stav vsech mist.\n\n";
+        }
+        else {
+            fire_event_name = std::string(buf, 0, bytes_received-2);
+        }
+    }
+    //client_socket closes in main function
+}
+
 /**
  * @brief Entry point of simulation
  */
@@ -60,31 +157,14 @@ int main(int argc, char** argv)
     SimUtil::setEventSender(event_sender);
     SimUtil::initializeTime();
     
-    EventTester* et = new EventTester();
-    event_sender->addObserver(et);
+    EventListener* listener = new EventListener();
+    event_sender->addObserver(listener);
+
+    //read petri net from file
     std::string read_failure = "JSON was read correctly";
     if(!JsonSerializer::loadFile(json_file_name, p_net, read_failure)){
         std::cout << read_failure << "\n";
         return 1;
-        
-        // failed to read from json, generate example net        
-        p_net = PetriNet();
-        
-        p_net.addPlace(Place("1p", 50));
-        p_net.addPlace(Place("2p", 4));
-        p_net.addPlace(Place("3p", 7));
-        p_net.addPlace(Place("4p", 1));
-        p_net.addTransition(Transition("1t"));
-        p_net.addTransition(Transition("2t"));
-        p_net.addTransition(Transition("3t"));
-        p_net.addArc(Arc("1a", "1p", "1t", 2));
-        p_net.addArc(Arc("2a", "1t", "2p", 5));
-        p_net.addArc(Arc("3a", "1t", "3p", 1));
-        
-        p_net.addArc(Arc("4a", "3p", "2t", 2));
-        p_net.addArc(Arc("5a", "2t", "4p", 2));
-        
-        p_net.addArc(Arc("6a", "4p", "1t", 2));
     }
     else {
         if(enable_debug_output)
@@ -92,53 +172,45 @@ int main(int argc, char** argv)
     }
 
     int64_t sleep_time;
-    bool exit_main_loop = false;
 
-    //initiate timers for non-zero delay values
+
+    //initiate timers for non-negative delay values
     for(auto pair : p_net.getTransitions()) {
-        if(pair.second.getDelay() != 0){
+        if(pair.second.getDelay() >= 0){
             //set scheduled timeout
             SimUtil::addTimer(pair.first, pair.second.getDelay());
         }
     }
 
-    std::string manual_input = "";
+    std::thread t_comm(communicate);
+
     do{
-        sleep_time = 100;
+        sleep_time = 500;
         if(enable_debug_output)
             std::cout << "old time: " << SimUtil::getNetTime() << " ---- new time: ";
 
+        //snapshot current time
         SimUtil::updateTime();
 
         if(enable_debug_output)
             std::cout << SimUtil::getNetTime() << "\n";
-        //listen to tcp
-        // if(tcp_updated)
-        // {
-            
-        // }
-        // if(external_input){
-        //     if(external_input == external_event::exit_)
-        //     if(external_input == external_event::fire_)
-        // }
+
 
         //find time to next transition timeout and fire all elapsed timers
-        int64_t timer_lowest_time = SimUtil::evaluateTimerState(p_net);
+        int64_t timer_lowest_time = SimUtil::evaluateTimerState(p_net, fire_event_name);
+
         if(timer_lowest_time < sleep_time){
             sleep_time = timer_lowest_time;
         }
-
-        //exiting condition
-        if(SimUtil::scheduled_timers.empty()){
-            exit_main_loop = true;
-        }
-        else{   
-            std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
-        }
+ 
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
     } while(!exit_main_loop);
 
+    t_comm.join();
+    close(client_socket);
+
     //print all place tokens
-    if(enable_debug_output)
+    //if(enable_debug_output)
         for(auto& pair : p_net.getPlaces()){
             std::cout << pair.first << " current tokens: " << pair.second.getCurrentTokens() << ".\n";
         }
@@ -147,8 +219,9 @@ int main(int argc, char** argv)
     // ---!! OVERRIDES INPUT FILE !!---
     //JsonSerializer::saveFile(json_file_name, p_net, read_failure);
 
-    event_sender->removeObserver(et);
-    delete et;
+
+    event_sender->removeObserver(listener);
+    delete listener;
     delete event_sender;
     return 0;
 }

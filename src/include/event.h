@@ -11,7 +11,7 @@
 #include <iostream>
 #include <vector>
 
-enum Event {create_place_, create_transition_, create_arc_, update_tokens_, fire_, log_message_};
+enum Event {update_tokens_, fire_, log_message_, schedule_fire_, timer_ignored_};
 
 
 /**

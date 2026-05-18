@@ -21,7 +21,7 @@ set(QT_VERSION_MAJOR 5)
 # for neovim and other editors
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network REQUIRED)
 
 add_subdirectory(src)
 

@@ -92,28 +92,48 @@ bool SimUtil::fire(PetriNet& pnet, const std::string& transition_id) {
             }
         }
     }
-    getEventSender()->throwEvent(Event::fire_, transition_id);
     return true;
 }
 
-int64_t SimUtil::evaluateTimerState(PetriNet& pnet) {
-    int64_t next_timer_in = 1000;
-    bool network_change = true;
-
-    while(network_change) {
+int64_t SimUtil::evaluateTimerState(PetriNet& pnet, std::string& event_name) {
+    int64_t next_timer_in = 100000;
+    if(scheduled_timers.empty()){
+        //fire a non-scheduled timer
+        for (auto pair : pnet.getTransitions())
+        if(pair.second.isEnabled() &&
+            (event_name != ""      && event_name == pair.second.getInputEventName())) 
+        {
+            if(fire(pnet, pair.first)) {
+                // another transition MAY be able to fire now
+                event_sender->throwEvent(Event::fire_, pair.first);
+            }
+            else{
+                event_sender->throwEvent(Event::timer_ignored_);
+            }
+            break;
+        }
+    }
+    else{
+        bool network_change = true;
+        while(network_change) {
         network_change = false;
 
         std::map<std::pair<std::string, int32_t>, int64_t>::iterator pair;
         for(pair = scheduled_timers.begin(); pair != scheduled_timers.end();) {
             Transition trans = pnet.transitions.at(pair->first.first);
             std::string trans_id = pair->first.first;
-            int64_t timer = pair->second;
+            int64_t timer = pair->second;    
 
-            if(timer <= getNetTime() && trans.isEnabled()) {
+            if((timer <= getNetTime() && trans.isEnabled()) || 
+               (event_name != ""      && event_name == trans.getInputEventName())) {
 
                 if(fire(pnet, trans_id)) {
                     // another transition MAY be able to fire now
+                    event_sender->throwEvent(Event::fire_, trans_id);
                     network_change = true;
+                }
+                else{
+                    event_sender->throwEvent(Event::timer_ignored_);
                 }
                 //remove the timer from scheduled timers even if it was not enabled
                 scheduled_timers.erase(pair->first);
@@ -124,13 +144,15 @@ int64_t SimUtil::evaluateTimerState(PetriNet& pnet) {
             }
 
             //calculate the lowest time until next transition fires
-            if(next_timer_in > timer - getNetTime()) {
+            if(timer > 0 && next_timer_in > timer - getNetTime()) {
                 next_timer_in = timer - getNetTime();
             }
             //advance the iterator
             pair++;
         }
+        }
     }
+    event_name = "";
     return next_timer_in;
 }
 

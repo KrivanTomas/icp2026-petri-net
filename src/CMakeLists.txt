@@ -94,7 +94,7 @@ add_executable(simulation
     simulation/sim_util.cpp
 )
 target_link_libraries(simulation 
-     net_model
+    net_model
 )
 
 

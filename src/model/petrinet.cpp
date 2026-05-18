@@ -3,6 +3,7 @@
  *
  * @author
  *     Tomáš Kudera
+ *     Lukáš Kurtin
  */
 
 

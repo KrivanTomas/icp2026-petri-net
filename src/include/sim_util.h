@@ -12,6 +12,33 @@
 #include "petrinet.h"
 #include "event.h"
 
+///char* size for communication - log
+#define LOGGING_SIZE 200
+///char* size for communication - event name
+#define EVENT_SIZE 100
+///char* size for communication - p/t/a id
+#define ID_SIZE 32
+
+enum InfoType {log_, event_, exit_, change_tokens_};
+
+/**
+ * @brief Defines values sent in between simulation and GUI
+ */
+struct Communication {
+    Event event;
+    union Data {
+        char log[LOGGING_SIZE];
+        char event[EVENT_SIZE];
+        int token_count;
+    } data;
+    char id[ID_SIZE];
+    InfoType info_type;
+
+};
+
+/**
+ * @brief Static utility class for simulation
+ */
 class SimUtil{
 public:
 
@@ -36,7 +63,7 @@ public:
      * @param pnet Petri net
      * @return Time to next timer elapse
      */
-    static int64_t evaluateTimerState(PetriNet& pnet);
+    static int64_t evaluateTimerState(PetriNet& pnet, std::string& event_name);
 
     /**
      * @brief Gets the event sender of this object

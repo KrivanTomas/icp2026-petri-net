@@ -59,7 +59,7 @@
             "id": "1p",
             "initial_tokens": 50,
             "position_x": 0.5550000071525574,
-            "position_y": 1.100000023841858
+            "position_y": 0.100000023841858
         },
         {
             "action_code": "",
@@ -89,7 +89,7 @@
             "delay_ms": 50,
             "guard": "",
             "id": "1t",
-            "input_event": "",
+            "input_event": "out",
             "position_x": 0.0,
             "position_y": 0.0
         },
@@ -98,7 +98,7 @@
             "delay_ms": 1000,
             "guard": "",
             "id": "2t",
-            "input_event": "",
+            "input_event": "in",
             "position_x": 0.0,
             "position_y": 0.0
         },
