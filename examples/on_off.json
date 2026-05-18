@@ -1,0 +1,61 @@
+{
+    "arcs": [
+        {
+            "id": "A1",
+            "source": "P1",
+            "target": "T1",
+            "weight": 1
+        },
+        {
+            "id": "A2",
+            "source": "T1",
+            "target": "P2",
+            "weight": 1
+        },
+        {
+            "id": "A3",
+            "source": "P2",
+            "target": "T2",
+            "weight": 1
+        },
+        {
+            "id": "A4",
+            "source": "T2",
+            "target": "P1",
+            "weight": 1
+        }
+    ],
+    "comment": "",
+    "inputs": [],
+    "name": "",
+    "outputs": [],
+    "places": [
+        {
+            "action_code": "",
+            "id": "P1",
+            "initial_tokens": 1
+        },
+        {
+            "action_code": "",
+            "id": "P2",
+            "initial_tokens": 0
+        }
+    ],
+    "transitions": [
+        {
+            "action_code": "",
+            "delay_ms": 0,
+            "guard": "",
+            "id": "T1",
+            "input_event": ""
+        },
+        {
+            "action_code": "",
+            "delay_ms": 0,
+            "guard": "",
+            "id": "T2",
+            "input_event": ""
+        }
+    ],
+    "variables": []
+}

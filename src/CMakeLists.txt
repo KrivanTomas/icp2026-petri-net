@@ -14,7 +14,7 @@ include_directories(./ui)
 
 
 # Petri net model
-add_library(net_model 
+add_library(net_model OBJECT
     model/petrinet.cpp 
     model/place.cpp 
     model/transition.cpp
@@ -30,8 +30,45 @@ target_link_libraries(net_model
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
 )
 
+add_library(editor OBJECT
+    editor/editor_graphics_scene.cpp 
+    include/editor_graphics_scene.h 
 
-add_library(main_window 
+    editor/editor_node.cpp 
+    include/editor_node.h 
+
+    editor/editor_place_item.cpp 
+    include/editor_place_item.h 
+
+    editor/editor_transition_item.cpp 
+    include/editor_transition_item.h 
+
+    editor/editor_arc_item.cpp 
+    include/editor_arc_item.h 
+
+    editor/place_property_editor.cpp
+    include/place_property_editor.h
+    ui/place_property_editor.ui
+
+    editor/transition_property_editor.cpp
+    include/transition_property_editor.h
+    ui/transition_property_editor.ui
+
+    editor/arc_property_editor.cpp
+    include/arc_property_editor.h
+    ui/arc_property_editor.ui
+
+    editor/id_validator.cpp
+    include/id_validator.h
+
+    editor/editor_net_model_sync.cpp
+    include/editor_net_model_sync.h
+)
+target_link_libraries(editor 
+    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+)
+
+add_library(main_window OBJECT
     main_window.cpp 
     include/main_window.h 
     ui/main_window.ui
@@ -46,9 +83,8 @@ add_executable(main
     main.cpp
 )
 target_link_libraries(main 
-    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets main_window net_model
+    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets main_window net_model editor
 )
-
 
 # set main binary location to ./build/main instead of ./build/src/main
 set_target_properties(main 
