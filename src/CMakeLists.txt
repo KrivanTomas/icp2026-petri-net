@@ -19,12 +19,14 @@ add_library(net_model OBJECT
     model/place.cpp 
     model/transition.cpp
     model/arc.cpp 
+    event.cpp
     json_serializer.cpp
     include/json_serializer.h
     include/petrinet.h 
     include/place.h 
     include/transition.h 
     include/arc.h
+    include/event.h
 )
 target_link_libraries(net_model 
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
@@ -86,8 +88,26 @@ target_link_libraries(main
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets main_window net_model editor
 )
 
+
+add_executable(simulation 
+    simulation/main.cpp
+    simulation/sim_util.cpp
+)
+target_link_libraries(simulation 
+     net_model
+)
+
+
 # set main binary location to ./build/main instead of ./build/src/main
 set_target_properties(main 
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+
+
+set_target_properties(simulation
     PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"

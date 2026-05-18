@@ -5,6 +5,7 @@
  *
  * @author
  *     Tomáš Kudera
+ *     Lukáš Kurtin
  */
 
 
@@ -14,19 +15,22 @@
 #include <string>
 #include <map>
 #include <set>
+#include <stdexcept>
 #include <chrono>
 #include "place.h"
 #include "transition.h"
 #include "arc.h"
+#include "event.h"
 
-
+class SimUtil;
 
 /**
  * @class PetriNet
  * @brief Main container of Petri Net components
  */
-class PetriNet 
+class PetriNet
 {
+    friend class SimUtil;
 public:
     /**
      * @brief petrinet constructor and initializer
@@ -159,20 +163,6 @@ public:
     void setVariable(const std::string& var_name, const std::string& value);
 
     /**
-     * @brief Function checks if transition has enough tokens to be fired.
-     * @param transition_id ID of transition, that is checked.
-     * @return True, if transition can be fired, or false if can not.
-     */
-    bool ableToBeFired(const std::string& transition_id);
-
-    /**
-     * @brief Function provides transition firing
-     * @param transition_id ID of transition.
-     * @return True if transition was safely fired, else false.
-     */
-    bool fire(const std::string& transition_id);
-
-    /**
      * @brief Resets the network into initial state.
      */
     void reset();
@@ -183,39 +173,18 @@ public:
     void clear();
 
     /**
-     * @brief Main simulation loop. Performs the maximum number of independent firings 
-     * and stabilizes the network (microsteps). Handles only instantaneous transitions. 
-     */
-    void fireScheduledTransitions();
-
-    /**
-     * @brief Updates internal time. (Milliseconds since launch).
-     */
-    void updateTime();
-
-    /**
-     * @brief Returns current time of the petri net.
-     * @return Time in milliseconds.
-     */
-    int petriNetInternalTime() const;
-
-    /**
-     * @brief Returns current system time.
-     * @return Time in milliseconds.
-     */
-    int64_t getCurrentTime() const;
-
-    /**
      * @brief Check if external input is defined.
      * @param input_name Validated input.
      * @return True if input is defined, or else false.
      */
     bool isInputDefined(const std::string& input_name) const;
 
+    
     //getters
     std::map<std::string, Place>& getPlaces();
     std::map<std::string, Transition>& getTransitions();
     std::map<std::string, Arc>& getArcs();
+
 
 private:
     std::string net_name = "Unknown petrinet";
@@ -227,8 +196,4 @@ private:
     std::map<std::string, Place> places;
     std::map<std::string, Transition> transitions;
     std::map<std::string, Arc> arcs;
-
-    int64_t time_at_start = 0;
-    int64_t current_time_ms = 0;
-    std::map<std::string, int64_t> scheduled_timers;
 };

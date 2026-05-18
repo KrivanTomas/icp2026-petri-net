@@ -1,0 +1,90 @@
+{
+    "arcs": [
+        {
+            "id": "1a",
+            "source": "1p",
+            "target": "1t",
+            "weight": 2
+        },
+        {
+            "id": "2a",
+            "source": "1t",
+            "target": "2p",
+            "weight": 5
+        },
+        {
+            "id": "3a",
+            "source": "1t",
+            "target": "3p",
+            "weight": 1
+        },
+        {
+            "id": "4a",
+            "source": "3p",
+            "target": "2t",
+            "weight": 2
+        },
+        {
+            "id": "5a",
+            "source": "2t",
+            "target": "4p",
+            "weight": 2
+        },
+        {
+            "id": "6a",
+            "source": "4p",
+            "target": "1t",
+            "weight": 2
+        }
+    ],
+    "comment": "",
+    "inputs": [],
+    "name": "",
+    "outputs": [],
+    "places": [
+        {
+            "action_code": "",
+            "id": "1p",
+            "initial_tokens": 50
+        },
+        {
+            "action_code": "",
+            "id": "2p",
+            "initial_tokens": 4
+        },
+        {
+            "action_code": "",
+            "id": "3p",
+            "initial_tokens": 7
+        },
+        {
+            "action_code": "",
+            "id": "4p",
+            "initial_tokens": 1
+        }
+    ],
+    "transitions": [
+        {
+            "action_code": "",
+            "delay_ms": 0,
+            "guard": "",
+            "id": "1t",
+            "input_event": ""
+        },
+        {
+            "action_code": "",
+            "delay_ms": 0,
+            "guard": "",
+            "id": "2t",
+            "input_event": ""
+        },
+        {
+            "action_code": "",
+            "delay_ms": 0,
+            "guard": "",
+            "id": "3t",
+            "input_event": ""
+        }
+    ],
+    "variables": []
+}
