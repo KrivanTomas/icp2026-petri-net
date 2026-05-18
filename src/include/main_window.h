@@ -114,6 +114,11 @@ protected:
      */
     void setSelectedItem(QGraphicsItem *item = nullptr);
 
+    /**
+     * @brief Starts the simulation subprocess if the current file is saved
+     */
+    void startSimulation();
+
 private:
     Ui::MainWindow *ui;
     EditorGraphicsScene *scene;

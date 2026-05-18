@@ -18,6 +18,7 @@
 #include <QSignalMapper>
 #include <QBrush>
 #include <QFileDialog>
+#include <QProcess>
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -47,6 +48,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newFile);
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openFile);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveFile);
+
+    // Simulation
+    connect(ui->actionStart, &QAction::triggered, this, &MainWindow::startSimulation);
 
     // Property ui
     place_editor_ui = new PlacePropertyEditor();
@@ -304,3 +308,21 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+void MainWindow::startSimulation() {
+    if(edited_file_path.empty() || file_dirty) {
+        QMessageBox::warning(
+            this,
+            tr("Unsaved Changes"),
+            tr("You have unsaved changes. Please save beforehand"),
+            QMessageBox::Ok 
+        );
+        return;
+    }
+
+    QString program = "./simulation";
+    QStringList arguments;
+    arguments << QString::fromStdString(edited_file_path);
+    QProcess *process = new QProcess(this);
+    process->start(program, arguments);
+    
+}
