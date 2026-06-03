@@ -2,48 +2,36 @@
     "arcs": [
         {
             "id": "1a",
-            "position_x": 0.0,
-            "position_y": 0.0,
             "source": "1p",
             "target": "1t",
             "weight": 2
         },
         {
             "id": "2a",
-            "position_x": 0.0,
-            "position_y": 0.0,
             "source": "1t",
             "target": "2p",
             "weight": 5
         },
         {
             "id": "3a",
-            "position_x": 0.0,
-            "position_y": 0.0,
             "source": "1t",
             "target": "3p",
             "weight": 1
         },
         {
             "id": "4a",
-            "position_x": 0.0,
-            "position_y": 0.0,
             "source": "3p",
             "target": "2t",
             "weight": 2
         },
         {
             "id": "5a",
-            "position_x": 0.0,
-            "position_y": 0.0,
             "source": "2t",
             "target": "4p",
             "weight": 2
         },
         {
             "id": "6a",
-            "position_x": 0.0,
-            "position_y": 0.0,
             "source": "4p",
             "target": "1t",
             "weight": 2
@@ -58,8 +46,8 @@
             "action_code": "",
             "id": "1p",
             "initial_tokens": 50,
-            "position_x": 0.5550000071525574,
-            "position_y": 0.100000023841858
+            "position_x": 0.0,
+            "position_y": 0.0
         },
         {
             "action_code": "",
